@@ -2,9 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class RecipeLayout extends StatefulWidget {
-  RecipeLayout({Key key, this.pos}) : super(key: key);
+  RecipeLayout({Key key, this.pos, this.scrollControllerTop}) : super(key: key);
 
   final int pos;
+  final ScrollController scrollControllerTop;
 
   @override
   _RecipeLayoutState createState() => _RecipeLayoutState();
@@ -26,99 +27,139 @@ class _RecipeLayoutState extends State<RecipeLayout> {
       physics: NeverScrollableScrollPhysics(),
       itemCount: items.length,
       itemBuilder: (context, index) {
-        return Card(
-          elevation: 5,
-          child: Dismissible(
-            key: Key(items[index]),
-            background: Container(
-              alignment: Alignment.centerRight,
-              color: Colors.red,
-              child: Padding(
-                padding: EdgeInsets.only(right: 20),
-                child: Icon(
-                  Icons.delete,
-                  color: Colors.white,
+        return Container(
+          padding: EdgeInsets.only(top: scrollDecide(index)),
+          child: Card(
+            elevation: 5,
+            child: Dismissible(
+              key: Key(items[index]),
+              background: Container(
+                alignment: Alignment.centerRight,
+                color: Colors.red,
+                child: Padding(
+                  padding: EdgeInsets.only(right: 20),
+                  child: Icon(
+                    Icons.delete,
+                    color: Colors.white,
+                  ),
                 ),
               ),
-            ),
-            onDismissed: (direction) {
-              // items--;
-              // sharedPrefs.list = items;
-              setState(() {
-                items.removeAt(index);
-              });
-            },
-            direction: DismissDirection.endToStart,
-            child: Container(
-              color: getPos(),
-              height: 100.0,
-              child: Row(
-                children: <Widget>[
-                  Container(
-                    height: 100.0,
-                    width: 70.0,
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: NetworkImage(
-                                "https://is2-ssl.mzstatic.com/image/thumb/Video2/v4/e1/69/8b/e1698bc0-c23d-2424-40b7-527864c94a8e/pr_source.lsr/268x0w.png"))),
-                  ),
-                  Container(
-                    height: 100,
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(
-                          10, 2, 0, 0),
-                      child: Column(
-                        crossAxisAlignment:
-                        CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            items[index],
-                          ),
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(
-                                0, 3, 0, 3),
-                            child: Container(
-                              width: 30,
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: Colors.teal),
-                                  borderRadius:
-                                  BorderRadius.all(
-                                      Radius.circular(
-                                          10))),
-                              child: Text(
-                                "3D",
-                                textAlign:
-                                TextAlign.center,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(
-                                0, 5, 0, 2),
-                            child: Container(
-                              width: 260,
-                              child: Text(
-                                "His genius finally recognized by his idol Chester",
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    color: Color.fromARGB(
-                                        255, 48, 48, 54)),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
+              onDismissed: (direction) {
+                setState(() {
+                  // items--;
+                  // sharedPrefs.list = items;
+                  items.removeAt(index);
+                });
+              },
+              direction: DismissDirection.endToStart,
+              child: Container(
+                color: getPos(),
+                height: 100.0,
+                child: Row(
+                  children: <Widget>[
+                    Container(
+                      height: 100.0,
+                      width: 70.0,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: NetworkImage(
+                                  "https://is2-ssl.mzstatic.com/image/thumb/Video2/v4/e1/69/8b/e1698bc0-c23d-2424-40b7-527864c94a8e/pr_source.lsr/268x0w.png"))),
                     ),
-                  )
-                ],
+                    Container(
+                      height: 100,
+                      child: Padding(
+                        padding:
+                        EdgeInsets.fromLTRB(10, 2, 0, 0),
+                        child: Column(
+                          crossAxisAlignment:
+                          CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              items[index],
+                            ),
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(
+                                  0, 3, 0, 3),
+                              child: Container(
+                                width: 30,
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: Colors.teal),
+                                    borderRadius:
+                                    BorderRadius.all(
+                                        Radius.circular(
+                                            10))),
+                                child: Text(
+                                  "3D",
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(
+                                  0, 5, 0, 2),
+                              child: Container(
+                                width: 260,
+                                child: Text(
+                                  "His genius finally recognized by his idol Chester",
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      color: Color.fromARGB(
+                                          255, 48, 48, 54)),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           ),
         );
       },
     );
+  }
+
+  double scrollDecide(int index) {
+    if (widget.scrollControllerTop.hasClients && index == 0) {
+      // log("top${scrollControllerTop.offset}");
+      // log("topMax${scrollControllerTop.position.maxScrollExtent}");
+      // log("bawah${scrollController.offset}");
+
+      // if (scrollControllerTop.offset == scrollControllerTop.position.maxScrollExtent) {
+      // if (scrollController.position.pixels ==
+      //         scrollController.position.minScrollExtent &&
+      //     scrollControllerTop.position.pixels ==
+      //         scrollControllerTop.position.maxScrollExtent &&
+      //     temp) {
+      //   temp = false;
+      //   return NeverScrollableScrollPhysics();
+      // }
+      // temp = true
+
+      return (widget.scrollControllerTop.offset/2);
+      // }
+
+      //
+      // if(scrollControllerTop.offset > 140){
+      //   if(scrollController.offset > 0){
+      //     return AlwaysScrollableScrollPhysics();
+      //   }
+      //   if(scrollController.offset == 0){
+      //     return NeverScrollableScrollPhysics();
+      //   }
+      //   return NeverScrollableScrollPhysics();
+      // }
+      // if(scrollControllerTop.offset == 0){
+      //   return NeverScrollableScrollPhysics();
+      // }
+
+    }
+    return 0;
   }
 
   static List getDummyList() {

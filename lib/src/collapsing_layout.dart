@@ -28,9 +28,11 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
   String newValue = "Mediterranean";
   PageController controller = PageController();
   ScrollController scrollController;
+  ScrollController scrollControllerTop;
+  int temp = 0;
 
-  List itemsDummy = getDummyList(10);
-  List itemsDummy1 = getDummyList(5);
+  List itemsDummy = getDummyList(7);
+  List itemsDummy1 = getDummyList(0);
   final _formKey = GlobalKey<FormState>();
   Future<List<Recipe>> future;
   String name;
@@ -41,7 +43,7 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
 
   int items = sharedPrefs.list;
 
-  double height = 100;
+  double height = 110;
 
   double baru = 0;
 
@@ -52,11 +54,14 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
     controller = PageController(initialPage: 0);
     scrollController = ScrollController();
     scrollController.addListener(() => setState(() {}));
+    scrollControllerTop = ScrollController();
+    scrollControllerTop.addListener(() => setState(() {}));
   }
 
   @override
   void dispose() {
     scrollController.dispose();
+    scrollControllerTop.dispose();
     controller.dispose();
     super.dispose();
   }
@@ -86,8 +91,12 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
     final result = await Navigator.pushNamed(context, '/add');
 
     setState(() {
-      items += result;
-      sharedPrefs.list = items;
+      temp++;
+      itemsDummy1 = getDummyList(temp);
+      if(temp >= 7){
+        items += result;
+        sharedPrefs.list = items;
+      }
     });
   }
 
@@ -211,7 +220,7 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
                   ),
                 )),
             SliverFixedExtentList(
-              itemExtent: MediaQuery.of(context).size.height + baru,
+              itemExtent: itemArea(temp),
               delegate: SliverChildListDelegate([
                 PageView.builder(
                   physics: NeverScrollableScrollPhysics(),
@@ -242,6 +251,7 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
                               onDismissed: (direction) {
                                 setState(() {
                                   items--;
+                                  temp--;
                                   sharedPrefs.list = items;
                                   itemsDummy1.removeAt(index);
                                 });
@@ -317,22 +327,36 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
                         },
                       );
                     }
-                    return RecipeLayout(pos: position);
+                    return RecipeLayout(
+                      pos: position,
+                      scrollControllerTop: scrollControllerTop,
+                    );
                   },
                 ),
               ]),
             ),
           ],
-          scrollController: this.scrollController,
+          scrollController: this.scrollControllerTop,
         ),
       ),
     );
   }
 
-  // Class buildList(Recipe recipe){
-  //
-  //
-  // }
+  double itemArea(int temp) {
+    if (temp >= 7) {
+      return MediaQuery.of(context).size.height + baru;
+    }
+    else if(temp == 6){
+      return MediaQuery.of(context).size.height;
+    }
+    else if(temp == 5){
+      return MediaQuery.of(context).size.height - 115;
+    }
+    return MediaQuery.of(context).size.height - 150;
+
+
+  }
+
 
   static List getDummyList(temp) {
     List list = List.generate(temp, (i) {
@@ -358,14 +382,8 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
         items = 0;
         sharedPrefs.list = 0;
       }
-      log("aaaaaaaaaaaa${scrollController.offset}");
 
 
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
       baru = height * items;
     });
   }
