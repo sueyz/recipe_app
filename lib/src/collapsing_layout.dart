@@ -27,7 +27,6 @@ class CollapsingLayout extends StatefulWidget {
 class _CollapsingLayoutState extends State<CollapsingLayout> {
   String newValue = "Mediterranean";
   PageController controller = PageController();
-  ScrollController scrollController;
   ScrollController scrollControllerTop;
   int temp = 0;
 
@@ -52,15 +51,12 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
     super.initState();
     future = RepositoryServiceRecipe.getAllRecipe();
     controller = PageController(initialPage: 0);
-    scrollController = ScrollController();
-    scrollController.addListener(() => setState(() {}));
     scrollControllerTop = ScrollController();
     scrollControllerTop.addListener(() => setState(() {}));
   }
 
   @override
   void dispose() {
-    scrollController.dispose();
     scrollControllerTop.dispose();
     controller.dispose();
     super.dispose();
