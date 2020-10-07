@@ -56,7 +56,7 @@ class RepositoryServiceRecipe {
       ${DatabaseCreator.steps},
       ${DatabaseCreator.isDeleted}
     )
-    VALUES (?,?,?,?)''';
+    VALUES (?,?,?,?,?,?)''';
     List<dynamic> params = [recipe.id, recipe.name, recipe.picture,recipe.ingredients, recipe.steps, recipe.isDeleted ? 1 : 0];
     final result = await db.rawInsert(sql, params);
     DatabaseCreator.databaseLog('Add recipe', sql, null, result, params);

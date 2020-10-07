@@ -2,17 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class RecipeLayout extends StatefulWidget {
-  RecipeLayout({Key key, this.pos, this.scrollControllerTop}) : super(key: key);
+  RecipeLayout({Key key, this.pos, this.items,}) : super(key: key);
 
   final int pos;
-  final ScrollController scrollControllerTop;
+  final List items;
 
   @override
   _RecipeLayoutState createState() => _RecipeLayoutState();
 }
 
 class _RecipeLayoutState extends State<RecipeLayout> {
-  List items = getDummyList();
 
   String yourParam;
   Function(String) onSelectParam;
@@ -25,14 +24,12 @@ class _RecipeLayoutState extends State<RecipeLayout> {
     return ListView.builder(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
-      itemCount: items.length,
+      itemCount: widget.items.length,
       itemBuilder: (context, index) {
-        return Container(
-          padding: EdgeInsets.only(top: scrollDecide(index)),
-          child: Card(
+        return Card(
             elevation: 5,
             child: Dismissible(
-              key: Key(items[index]),
+              key: Key( widget.items[index]),
               background: Container(
                 alignment: Alignment.centerRight,
                 color: Colors.red,
@@ -48,7 +45,7 @@ class _RecipeLayoutState extends State<RecipeLayout> {
                 setState(() {
                   // items--;
                   // sharedPrefs.list = items;
-                  items.removeAt(index);
+                  widget.items.removeAt(index);
                 });
               },
               direction: DismissDirection.endToStart,
@@ -76,7 +73,7 @@ class _RecipeLayoutState extends State<RecipeLayout> {
                           CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              items[index],
+                              widget.items[index],
                             ),
                             Padding(
                               padding: EdgeInsets.fromLTRB(
@@ -118,56 +115,11 @@ class _RecipeLayoutState extends State<RecipeLayout> {
                 ),
               ),
             ),
-          ),
         );
       },
     );
   }
 
-  double scrollDecide(int index) {
-    if (widget.scrollControllerTop.hasClients && index == 0) {
-      // log("top${scrollControllerTop.offset}");
-      // log("topMax${scrollControllerTop.position.maxScrollExtent}");
-      // log("bawah${scrollController.offset}");
-
-      // if (scrollControllerTop.offset == scrollControllerTop.position.maxScrollExtent) {
-      // if (scrollController.position.pixels ==
-      //         scrollController.position.minScrollExtent &&
-      //     scrollControllerTop.position.pixels ==
-      //         scrollControllerTop.position.maxScrollExtent &&
-      //     temp) {
-      //   temp = false;
-      //   return NeverScrollableScrollPhysics();
-      // }
-      // temp = true
-
-      return (widget.scrollControllerTop.offset/2);
-      // }
-
-      //
-      // if(scrollControllerTop.offset > 140){
-      //   if(scrollController.offset > 0){
-      //     return AlwaysScrollableScrollPhysics();
-      //   }
-      //   if(scrollController.offset == 0){
-      //     return NeverScrollableScrollPhysics();
-      //   }
-      //   return NeverScrollableScrollPhysics();
-      // }
-      // if(scrollControllerTop.offset == 0){
-      //   return NeverScrollableScrollPhysics();
-      // }
-
-    }
-    return 0;
-  }
-
-  static List getDummyList() {
-    List list = List.generate(10, (i) {
-      return "Item ${i + 1}";
-    });
-    return list;
-  }
 
   MaterialAccentColor getPos() {
     if (widget.pos == 0) return Colors.orangeAccent;
