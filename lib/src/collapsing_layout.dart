@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:recipe_app/src/db/model/Recipe.dart';
 import 'package:recipe_app/src/db/repository/repository_service_recipe.dart';
-import 'package:recipe_app/src/recipe_list.dart';
 import 'sliver_fab.dart';
 import 'package:recipe_app/src/utils/shared_prefs.dart';
 
@@ -28,17 +27,16 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
   String newValue = "Mediterranean";
   PageController controller = PageController();
   ScrollController scrollControllerTop;
-  List wow = [0,0,0,0,0];
+  List wow = [
+    sharedPrefs.getList("Mediterranean"),
+    sharedPrefs.getList("Asian"),
+    sharedPrefs.getList("American"),
+    sharedPrefs.getList("European"),
+    sharedPrefs.getList("Vegan")
+  ];
 
   int current = 0;
 
-  List itemsDummy = getDummyList(0);
-  List itemsDummy1 = getDummyList(0);
-  List itemsDummy2 = getDummyList(0);
-  List itemsDummy3 = getDummyList(0);
-  List itemsDummy4 = getDummyList(0);
-
-  final _formKey = GlobalKey<FormState>();
   Future<List<Recipe>> future;
   String name;
   String picture;
@@ -46,7 +44,8 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
   String steps;
   int id;
 
-  int items = sharedPrefs.list;
+  // int items = sharedPrefs.getList("Mediterranean");
+  int temp = 0;
 
   double height = 110;
 
@@ -113,17 +112,18 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
   _navigateToNewRecipe(BuildContext context) async {
     final result = await Navigator.pushNamed(context, '/add');
     int count = await RepositoryServiceRecipe.recipeCount();
-
+    // 'Mediterranean',
+    // 'Asian',
+    // 'American',
+    // 'European',
+    // 'Vegan'
     setState(() {
       switch (current) {
         case 0:
           {
-            wow[0]++;
-            itemsDummy = getDummyList(wow[0]);
-            if (wow[0] >= 7) {
-              items += result;
-              sharedPrefs.list = items;
-            }
+            wow[0] += result;
+            sharedPrefs.list("Mediterranean", wow[0]);
+            log("aaaaaaaaa${wow[0]}");
             createTodo(
                 Recipe(count, current, "rice", "sadad", "asdsadas", "adasd",
                     false),
@@ -132,48 +132,41 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
           break;
         case 1:
           {
-            wow[1]++;
-            itemsDummy1 = getDummyList(wow[1]);
-            if (wow[1] >= 7) {
-              items += result;
-              sharedPrefs.list = items;
-            }
+            wow[1] += result;
+            sharedPrefs.list("Asian", wow[1]);
             createTodo(
                 Recipe(count, current, "Noodle", "sadad", "asdsadas", "adasd",
                     false),
                 current);
           }
           break;
-        case 2:
-          {
-            wow[2]++;
-            itemsDummy2 = getDummyList(wow[2]);
-            if (wow[2] >= 7) {
-              items += result;
-              sharedPrefs.list = items;
-            }
-          }
-          break;
-        case 3:
-          {
-            wow[3]++;
-            itemsDummy3 = getDummyList(wow[3]);
-            if (wow[3] >= 7) {
-              items += result;
-              sharedPrefs.list = items;
-            }
-          }
-          break;
-        case 4:
-          {
-            wow[4]++;
-            itemsDummy4 = getDummyList(wow[4]);
-            if (wow[4] >= 7) {
-              items += result;
-              sharedPrefs.list = items;
-            }
-          }
-          break;
+        // case 2:
+        //   {
+        //     wow[2]++;
+        //     if (wow[2] >= 7) {
+        //       items += result;
+        //       sharedPrefs.list = items;
+        //     }
+        //   }
+        //   break;
+        // case 3:
+        //   {
+        //     wow[3]++;
+        //     if (wow[3] >= 7) {
+        //       items += result;
+        //       sharedPrefs.list = items;
+        //     }
+        //   }
+        //   break;
+        // case 4:
+        //   {
+        //     wow[4]++;
+        //     if (wow[4] >= 7) {
+        //       items += result;
+        //       sharedPrefs.list = items;
+        //     }
+        //   }
+        //   break;
       }
     });
   }
@@ -214,9 +207,24 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
                       onPressed: () {
                         deleteTodo(todo);
                         setState(() {
-                          items--;
                           wow[position]--;
-                          sharedPrefs.list = items;
+                          switch (position) {
+                            case 0:
+                              sharedPrefs.list("Mediterranean", wow[position]);
+                              break;
+                            case 1:
+                              sharedPrefs.list("Asian", wow[position]);
+                              break;
+                            case 2:
+                              sharedPrefs.list("American", wow[position]);
+                              break;
+                            case 3:
+                              sharedPrefs.list("European", wow[position]);
+                              break;
+                            case 4:
+                              sharedPrefs.list("Vegan", wow[position]);
+                              break;
+                          }
                         });
                         Navigator.of(context).pop(true);
                       },
@@ -463,13 +471,6 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
     return MediaQuery.of(context).size.height - 160;
   }
 
-  static List getDummyList(temp) {
-    List list = List.generate(temp, (i) {
-      return "Item ${i + 1}";
-    });
-    return list;
-  }
-
   MaterialAccentColor getPos(pos) {
     if (pos == 0) return Colors.orangeAccent;
     if (pos == 1) return Colors.blueAccent;
@@ -483,12 +484,28 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
 
   void _incrementCounter() {
     setState(() {
-      if (items < 0) {
-        items = 0;
-        sharedPrefs.list = 0;
+      if (wow[current] < 0) {
+        wow[current] = 0;
+        switch (current) {
+          case 0:
+            sharedPrefs.list("Mediterranean", 0);
+            break;
+          case 1:
+            sharedPrefs.list("Asian", 0);
+            break;
+          case 2:
+            sharedPrefs.list("American", 0);
+            break;
+          case 3:
+            sharedPrefs.list("European", 0);
+            break;
+          case 4:
+            sharedPrefs.list("Vegan", 0);
+            break;
+        }
       }
 
-      baru = height * items;
+      baru = height * (wow[current] - 6);
     });
   }
 }

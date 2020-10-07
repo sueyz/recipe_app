@@ -9,10 +9,10 @@ class SharedPrefs {
     }
   }
 
-  int get list => _sharedPrefs.getInt(listCount) ?? 0;
+  int getList(test) => _sharedPrefs.getInt(test) ?? 0;
 
-  set list(int value) {
-    _sharedPrefs.setInt(listCount, value);
+  void list(test, int value) {
+    _sharedPrefs.setInt(test, value);
   }
 
 }
