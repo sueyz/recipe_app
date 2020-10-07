@@ -16,13 +16,26 @@ class RepositoryServiceRecipe {
     return recipes;
   }
 
+  static Future<List<Recipe>> getAllSpecificRecipe(int pos) async {
+    final sql = '''SELECT * FROM ${DatabaseCreator.recipeTable}
+    WHERE ${DatabaseCreator.typePos} = ?''';
+    final data = await db.rawQuery(sql);
+    List<Recipe> recipes = List();
+
+    for (final node in data) {
+      final recipe = Recipe.fromJson(node);
+      recipes.add(recipe);
+    }
+    return recipes;
+  }
+
   static Future<Recipe> getRecipe(int id) async {
     //final sql = '''SELECT * FROM ${DatabaseCreator.todoTable}
     //WHERE ${DatabaseCreator.id} = $id''';
     //final data = await db.rawQuery(sql);
 
     final sql = '''SELECT * FROM ${DatabaseCreator.recipeTable}
-    WHERE ${DatabaseCreator.id} = ?''';
+    WHERE ${DatabaseCreator.typePos} = ?''';
 
     List<dynamic> params = [id];
     final data = await db.rawQuery(sql, params);
@@ -50,14 +63,15 @@ class RepositoryServiceRecipe {
     final sql = '''INSERT INTO ${DatabaseCreator.recipeTable}
     (
       ${DatabaseCreator.id},
+      ${DatabaseCreator.typePos},
       ${DatabaseCreator.name},
       ${DatabaseCreator.picture},
       ${DatabaseCreator.ingredients},
       ${DatabaseCreator.steps},
       ${DatabaseCreator.isDeleted}
     )
-    VALUES (?,?,?,?,?,?)''';
-    List<dynamic> params = [recipe.id, recipe.name, recipe.picture,recipe.ingredients, recipe.steps, recipe.isDeleted ? 1 : 0];
+    VALUES (?,?,?,?,?,?,?)''';
+    List<dynamic> params = [recipe.id, recipe.typPos, recipe.name, recipe.picture,recipe.ingredients, recipe.steps, recipe.isDeleted ? 1 : 0];
     final result = await db.rawInsert(sql, params);
     DatabaseCreator.databaseLog('Add recipe', sql, null, result, params);
   }
@@ -86,14 +100,15 @@ class RepositoryServiceRecipe {
     ''';*/
 
     final sql = '''UPDATE ${DatabaseCreator.recipeTable}
-    SET ${DatabaseCreator.name} = ?,
+    SET ${DatabaseCreator.typePos} = ?,
+        ${DatabaseCreator.name} = ?,
         ${DatabaseCreator.picture} = ?,
         ${DatabaseCreator.ingredients} = ?,
         ${DatabaseCreator.steps} = ?
     WHERE ${DatabaseCreator.id} = ?
     ''';
 
-    List<dynamic> params = [recipe.name, recipe.picture, recipe.ingredients, recipe.steps, recipe.id];
+    List<dynamic> params = [recipe.name, recipe.typPos, recipe.picture, recipe.ingredients, recipe.steps, recipe.id];
     final result = await db.rawUpdate(sql, params);
 
     DatabaseCreator.databaseLog('Update recipe', sql, null, result, params);

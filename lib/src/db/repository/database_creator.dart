@@ -9,6 +9,7 @@ Database db;
 class DatabaseCreator {
   static const recipeTable = 'recipe';
   static const id = 'id';
+  static const typePos = 'typePos';
   static const name = 'name';
   static const picture = 'picture_path';
   static const ingredients = 'ingredients';
@@ -33,6 +34,7 @@ class DatabaseCreator {
     final todoSql = '''CREATE TABLE $recipeTable
     (
       $id INTEGER PRIMARY KEY,
+      $typePos INTEGER,
       $name TEXT,
       $picture TEXT,
       $ingredients TEXT,

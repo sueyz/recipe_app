@@ -72,8 +72,8 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
     super.dispose();
   }
 
-  void readData() async {
-    final todo = await RepositoryServiceRecipe.getRecipe(9);
+  void readData(int current) async {
+    final todo = await RepositoryServiceRecipe.getRecipe(current);
     print(todo.name);
   }
 
@@ -101,24 +101,25 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
     });
   }
 
-  void createTodo() async {
+  void createTodo(Recipe todo, int current) async {
     // if (_formKey.currentState.validate()) {
     //   _formKey.currentState.save();
-    int count = await RepositoryServiceRecipe.recipeCount();
-    final todo = Recipe(count, "rice", "sadad", "asdsadas", "adasd", false);
-    await RepositoryServiceRecipe.addRecipe(todo);
+    var what = todo;
+    await RepositoryServiceRecipe.addRecipe(what);
     setState(() {
-      id = todo.id;
+      id = what.id;
       future = RepositoryServiceRecipe.getAllRecipe();
     });
-    print(todo.id);
+    print(what.id);
     // }
   }
 
   _navigateToNewRecipe(BuildContext context) async {
     final result = await Navigator.pushNamed(context, '/add');
+    int count = await RepositoryServiceRecipe.recipeCount();
 
-    setState(() {
+
+    setState(()  {
       switch (current) {
         case 0:
           {
@@ -128,8 +129,10 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
               items += result;
               sharedPrefs.list = items;
             }
-
-            createTodo();
+            createTodo(
+                Recipe(count, current, "rice", "sadad", "asdsadas", "adasd",
+                    false),
+                current);
           }
           break;
         case 1:
@@ -140,6 +143,10 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
               items += result;
               sharedPrefs.list = items;
             }
+            createTodo(
+                Recipe(count, current, "Noodle", "sadad", "asdsadas", "adasd",
+                    false),
+                current);
           }
           break;
         case 2:
@@ -176,114 +183,119 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
     });
   }
 
-
-  Card buildItem(Recipe todo) {
-    return Card(
-      elevation: 5,
-      child: Dismissible(
-        key: Key(todo.id.toString()),
-        background: Container(
-          alignment: Alignment.centerRight,
-          color: Colors.red,
-          child: Padding(
-            padding: EdgeInsets.only(right: 20),
-            child: Icon(
-              Icons.delete,
-              color: Colors.white,
+  Card buildItem(Recipe todo, int position) {
+    if(todo.typPos == position){
+      return Card(
+        elevation: 5,
+        child: Dismissible(
+          key: Key(todo.id.toString()),
+          background: Container(
+            alignment: Alignment.centerRight,
+            color: Colors.red,
+            child: Padding(
+              padding: EdgeInsets.only(right: 20),
+              child: Icon(
+                Icons.delete,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          confirmDismiss: (DismissDirection direction) async {
+            return await showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: new Text("Are you sure?"),
+                  actions: <Widget>[
+                    // usually buttons at the bottom of the dialog
+                    FlatButton(
+                      child: new Text("Cancel"),
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                    ),
+                    FlatButton(
+                      child: new Text("Delete"),
+                      onPressed: () {
+                        deleteTodo(todo);
+                        setState(() {
+                          items--;
+                          temp--;
+                          sharedPrefs.list = items;
+                        });
+                        Navigator.of(context).pop(true);
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+          direction: DismissDirection.endToStart,
+          child: Container(
+            color: getPos(current),
+            height: 100.0,
+            child: Row(
+              children: <Widget>[
+                Container(
+                  height: 100.0,
+                  width: 70.0,
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: NetworkImage(
+                              "https://is2-ssl.mzstatic.com/image/thumb/Video2/v4/e1/69/8b/e1698bc0-c23d-2424-40b7-527864c94a8e/pr_source.lsr/268x0w.png"))),
+                ),
+                Container(
+                  height: 100,
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(10, 2, 0, 0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          todo.name,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(0, 3, 0, 3),
+                          child: Container(
+                            width: 30,
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Colors.teal),
+                                borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                            child: Text(
+                              "3D",
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(0, 5, 0, 2),
+                          child: Container(
+                            width: 260,
+                            child: Text(
+                              "His genius finally recognized by his idol Chester",
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  color: Color.fromARGB(255, 48, 48, 54)),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                )
+              ],
             ),
           ),
         ),
-        confirmDismiss: (DismissDirection direction) async {
-          return await showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: new Text("Are you sure?"),
-                actions: <Widget>[
-                  // usually buttons at the bottom of the dialog
-                  FlatButton(
-                    child: new Text("Cancel"),
-                    onPressed: () {
-                      Navigator.of(context).pop(false);
-                    },
-                  ),
-                  FlatButton(
-                    child: new Text("Delete"),
-                    onPressed: () {
-                      deleteTodo(todo);
-                      setState(() {
-                        items--;
-                        temp--;
-                        sharedPrefs.list = items;
-                      });
-                      Navigator.of(context).pop(true);
-                    },
-                  ),
-                ],
-              );
-            },
-          );
-        },
-        direction: DismissDirection.endToStart,
-        child: Container(
-          color: getPos(current),
-          height: 100.0,
-          child: Row(
-            children: <Widget>[
-              Container(
-                height: 100.0,
-                width: 70.0,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: NetworkImage(
-                            "https://is2-ssl.mzstatic.com/image/thumb/Video2/v4/e1/69/8b/e1698bc0-c23d-2424-40b7-527864c94a8e/pr_source.lsr/268x0w.png"))),
-              ),
-              Container(
-                height: 100,
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(10, 2, 0, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        todo.name,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(0, 3, 0, 3),
-                        child: Container(
-                          width: 30,
-                          decoration: BoxDecoration(
-                              border: Border.all(color: Colors.teal),
-                              borderRadius:
-                              BorderRadius.all(Radius.circular(10))),
-                          child: Text(
-                            "3D",
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(0, 5, 0, 2),
-                        child: Container(
-                          width: 260,
-                          child: Text(
-                            "His genius finally recognized by his idol Chester",
-                            style: TextStyle(
-                                fontSize: 15,
-                                color: Color.fromARGB(255, 48, 48, 54)),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
+      );
+    }
+    else
+      return  Card();
+
+
   }
 
   @override
@@ -418,417 +430,24 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
                   controller: this.controller,
                   itemCount: 5,
                   itemBuilder: (context, position) {
-                    if (position == 0) {
+                      // future = RepositoryServiceRecipe.getspe(position);
+                      // readData(position);
                       return FutureBuilder<List<Recipe>>(
                         future: future,
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
-                            return Padding(padding:EdgeInsets.only(top: 10), child: Column(
-                                children: snapshot.data
-                                    .map((todo) => buildItem(todo))
-                                    .toList()));
+                            return Padding(
+                                padding: EdgeInsets.only(top: 10),
+                                child: Column(
+                                    children: snapshot.data
+                                        .map(
+                                            (todo) => buildItem(todo, position))
+                                        .toList()));
                           } else {
                             return SizedBox();
                           }
                         },
                       );
-                    }
-                    if (position == 1) {
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: itemsDummy1.length,
-                        itemBuilder: (context, index) {
-                          return Card(
-                            elevation: 5,
-                            child: Dismissible(
-                              key: Key(itemsDummy1[index]),
-                              background: Container(
-                                alignment: Alignment.centerRight,
-                                color: Colors.red,
-                                child: Padding(
-                                  padding: EdgeInsets.only(right: 20),
-                                  child: Icon(
-                                    Icons.delete,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                              onDismissed: (direction) {
-                                setState(() {
-                                  items--;
-                                  temp--;
-                                  sharedPrefs.list = items;
-                                  itemsDummy1.removeAt(index);
-                                });
-                              },
-                              direction: DismissDirection.endToStart,
-                              child: Container(
-                                color: getPos(position),
-                                height: 100.0,
-                                child: Row(
-                                  children: <Widget>[
-                                    Container(
-                                      height: 100.0,
-                                      width: 70.0,
-                                      decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                              fit: BoxFit.cover,
-                                              image: NetworkImage(
-                                                  "https://is2-ssl.mzstatic.com/image/thumb/Video2/v4/e1/69/8b/e1698bc0-c23d-2424-40b7-527864c94a8e/pr_source.lsr/268x0w.png"))),
-                                    ),
-                                    Container(
-                                      height: 100,
-                                      child: Padding(
-                                        padding:
-                                        EdgeInsets.fromLTRB(10, 2, 0, 0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Text(
-                                              itemsDummy1[index],
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  0, 3, 0, 3),
-                                              child: Container(
-                                                width: 30,
-                                                decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                        color: Colors.teal),
-                                                    borderRadius:
-                                                    BorderRadius.all(
-                                                        Radius.circular(
-                                                            10))),
-                                                child: Text(
-                                                  "3D",
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  0, 5, 0, 2),
-                                              child: Container(
-                                                width: 260,
-                                                child: Text(
-                                                  "His genius finally recognized by his idol Chester",
-                                                  style: TextStyle(
-                                                      fontSize: 15,
-                                                      color: Color.fromARGB(
-                                                          255, 48, 48, 54)),
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    }
-                    if (position == 2) {
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: itemsDummy1.length,
-                        itemBuilder: (context, index) {
-                          return Card(
-                            elevation: 5,
-                            child: Dismissible(
-                              key: Key(itemsDummy1[index]),
-                              background: Container(
-                                alignment: Alignment.centerRight,
-                                color: Colors.red,
-                                child: Padding(
-                                  padding: EdgeInsets.only(right: 20),
-                                  child: Icon(
-                                    Icons.delete,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                              onDismissed: (direction) {
-                                setState(() {
-                                  items--;
-                                  temp--;
-                                  sharedPrefs.list = items;
-                                  itemsDummy1.removeAt(index);
-                                });
-                              },
-                              direction: DismissDirection.endToStart,
-                              child: Container(
-                                color: getPos(position),
-                                height: 100.0,
-                                child: Row(
-                                  children: <Widget>[
-                                    Container(
-                                      height: 100.0,
-                                      width: 70.0,
-                                      decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                              fit: BoxFit.cover,
-                                              image: NetworkImage(
-                                                  "https://is2-ssl.mzstatic.com/image/thumb/Video2/v4/e1/69/8b/e1698bc0-c23d-2424-40b7-527864c94a8e/pr_source.lsr/268x0w.png"))),
-                                    ),
-                                    Container(
-                                      height: 100,
-                                      child: Padding(
-                                        padding:
-                                        EdgeInsets.fromLTRB(10, 2, 0, 0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Text(
-                                              itemsDummy1[index],
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  0, 3, 0, 3),
-                                              child: Container(
-                                                width: 30,
-                                                decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                        color: Colors.teal),
-                                                    borderRadius:
-                                                    BorderRadius.all(
-                                                        Radius.circular(
-                                                            10))),
-                                                child: Text(
-                                                  "3D",
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  0, 5, 0, 2),
-                                              child: Container(
-                                                width: 260,
-                                                child: Text(
-                                                  "His genius finally recognized by his idol Chester",
-                                                  style: TextStyle(
-                                                      fontSize: 15,
-                                                      color: Color.fromARGB(
-                                                          255, 48, 48, 54)),
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    }
-                    if (position == 3) {
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: itemsDummy1.length,
-                        itemBuilder: (context, index) {
-                          return Card(
-                            elevation: 5,
-                            child: Dismissible(
-                              key: Key(itemsDummy1[index]),
-                              background: Container(
-                                alignment: Alignment.centerRight,
-                                color: Colors.red,
-                                child: Padding(
-                                  padding: EdgeInsets.only(right: 20),
-                                  child: Icon(
-                                    Icons.delete,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                              onDismissed: (direction) {
-                                setState(() {
-                                  items--;
-                                  temp--;
-                                  sharedPrefs.list = items;
-                                  itemsDummy1.removeAt(index);
-                                });
-                              },
-                              direction: DismissDirection.endToStart,
-                              child: Container(
-                                color: getPos(position),
-                                height: 100.0,
-                                child: Row(
-                                  children: <Widget>[
-                                    Container(
-                                      height: 100.0,
-                                      width: 70.0,
-                                      decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                              fit: BoxFit.cover,
-                                              image: NetworkImage(
-                                                  "https://is2-ssl.mzstatic.com/image/thumb/Video2/v4/e1/69/8b/e1698bc0-c23d-2424-40b7-527864c94a8e/pr_source.lsr/268x0w.png"))),
-                                    ),
-                                    Container(
-                                      height: 100,
-                                      child: Padding(
-                                        padding:
-                                        EdgeInsets.fromLTRB(10, 2, 0, 0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Text(
-                                              itemsDummy1[index],
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  0, 3, 0, 3),
-                                              child: Container(
-                                                width: 30,
-                                                decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                        color: Colors.teal),
-                                                    borderRadius:
-                                                    BorderRadius.all(
-                                                        Radius.circular(
-                                                            10))),
-                                                child: Text(
-                                                  "3D",
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  0, 5, 0, 2),
-                                              child: Container(
-                                                width: 260,
-                                                child: Text(
-                                                  "His genius finally recognized by his idol Chester",
-                                                  style: TextStyle(
-                                                      fontSize: 15,
-                                                      color: Color.fromARGB(
-                                                          255, 48, 48, 54)),
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    }
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: itemsDummy1.length,
-                      itemBuilder: (context, index) {
-                        return Card(
-                          elevation: 5,
-                          child: Dismissible(
-                            key: Key(itemsDummy1[index]),
-                            background: Container(
-                              alignment: Alignment.centerRight,
-                              color: Colors.red,
-                              child: Padding(
-                                padding: EdgeInsets.only(right: 20),
-                                child: Icon(
-                                  Icons.delete,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                            onDismissed: (direction) {
-                              setState(() {
-                                items--;
-                                temp--;
-                                sharedPrefs.list = items;
-                                itemsDummy1.removeAt(index);
-                              });
-                            },
-                            direction: DismissDirection.endToStart,
-                            child: Container(
-                              color: getPos(position),
-                              height: 100.0,
-                              child: Row(
-                                children: <Widget>[
-                                  Container(
-                                    height: 100.0,
-                                    width: 70.0,
-                                    decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                            fit: BoxFit.cover,
-                                            image: NetworkImage(
-                                                "https://is2-ssl.mzstatic.com/image/thumb/Video2/v4/e1/69/8b/e1698bc0-c23d-2424-40b7-527864c94a8e/pr_source.lsr/268x0w.png"))),
-                                  ),
-                                  Container(
-                                    height: 100,
-                                    child: Padding(
-                                      padding: EdgeInsets.fromLTRB(10, 2, 0, 0),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Text(
-                                            itemsDummy1[index],
-                                          ),
-                                          Padding(
-                                            padding:
-                                            EdgeInsets.fromLTRB(0, 3, 0, 3),
-                                            child: Container(
-                                              width: 30,
-                                              decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      color: Colors.teal),
-                                                  borderRadius:
-                                                  BorderRadius.all(
-                                                      Radius.circular(10))),
-                                              child: Text(
-                                                "3D",
-                                                textAlign: TextAlign.center,
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding:
-                                            EdgeInsets.fromLTRB(0, 5, 0, 2),
-                                            child: Container(
-                                              width: 260,
-                                              child: Text(
-                                                "His genius finally recognized by his idol Chester",
-                                                style: TextStyle(
-                                                    fontSize: 15,
-                                                    color: Color.fromARGB(
-                                                        255, 48, 48, 54)),
-                                              ),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    );
                   },
                 ),
               ]),
@@ -842,25 +461,13 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
 
   double itemArea(int temp) {
     if (temp >= 7) {
-      return MediaQuery
-          .of(context)
-          .size
-          .height + baru;
+      return MediaQuery.of(context).size.height + baru;
     } else if (temp == 6) {
-      return MediaQuery
-          .of(context)
-          .size
-          .height;
+      return MediaQuery.of(context).size.height;
     } else if (temp == 5) {
-      return MediaQuery
-          .of(context)
-          .size
-          .height - 115;
+      return MediaQuery.of(context).size.height - 115;
     }
-    return MediaQuery
-        .of(context)
-        .size
-        .height - 150;
+    return MediaQuery.of(context).size.height - 150;
   }
 
   static List getDummyList(temp) {
@@ -899,8 +506,8 @@ class StickyTabBarDelegate extends SliverPersistentHeaderDelegate {
   StickyTabBarDelegate({@required this.child});
 
   @override
-  Widget build(BuildContext context, double shrinkOffset,
-      bool overlapsContent) {
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
     return this.child;
   }
 
