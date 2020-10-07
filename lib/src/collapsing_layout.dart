@@ -118,8 +118,7 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
     final result = await Navigator.pushNamed(context, '/add');
     int count = await RepositoryServiceRecipe.recipeCount();
 
-
-    setState(()  {
+    setState(() {
       switch (current) {
         case 0:
           {
@@ -184,7 +183,7 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
   }
 
   Card buildItem(Recipe todo, int position) {
-    if(todo.typPos == position){
+    if (todo.typPos == position) {
       return Card(
         elevation: 5,
         child: Dismissible(
@@ -263,7 +262,7 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
                             decoration: BoxDecoration(
                                 border: Border.all(color: Colors.teal),
                                 borderRadius:
-                                BorderRadius.all(Radius.circular(10))),
+                                    BorderRadius.all(Radius.circular(10))),
                             child: Text(
                               "3D",
                               textAlign: TextAlign.center,
@@ -291,11 +290,10 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
           ),
         ),
       );
-    }
-    else
-      return  Card();
-
-
+    } else
+      return Card(
+        margin: EdgeInsets.zero,
+      );
   }
 
   @override
@@ -430,24 +428,23 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
                   controller: this.controller,
                   itemCount: 5,
                   itemBuilder: (context, position) {
-                      // future = RepositoryServiceRecipe.getspe(position);
-                      // readData(position);
-                      return FutureBuilder<List<Recipe>>(
-                        future: future,
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            return Padding(
-                                padding: EdgeInsets.only(top: 10),
-                                child: Column(
-                                    children: snapshot.data
-                                        .map(
-                                            (todo) => buildItem(todo, position))
-                                        .toList()));
-                          } else {
-                            return SizedBox();
-                          }
-                        },
-                      );
+                    // future = RepositoryServiceRecipe.getspe(position);
+                    // readData(position);
+                    return FutureBuilder<List<Recipe>>(
+                      future: future,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return Padding(
+                              padding: EdgeInsets.only(top: 10),
+                              child: Column(
+                                  children: snapshot.data
+                                      .map((todo) => buildItem(todo, position))
+                                      .toList()));
+                        } else {
+                          return SizedBox();
+                        }
+                      },
+                    );
                   },
                 ),
               ]),
