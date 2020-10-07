@@ -203,7 +203,7 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
                   // usually buttons at the bottom of the dialog
                   FlatButton(
                     child: new Text("Cancel"),
-                    onPressed: (){
+                    onPressed: () {
                       Navigator.of(context).pop(false);
                     },
                   ),
@@ -256,7 +256,7 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
                           decoration: BoxDecoration(
                               border: Border.all(color: Colors.teal),
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(10))),
+                              BorderRadius.all(Radius.circular(10))),
                           child: Text(
                             "3D",
                             textAlign: TextAlign.center,
@@ -423,10 +423,10 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
                         future: future,
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
-                            return Column(
+                            return Padding(padding:EdgeInsets.only(top: 10), child: Column(
                                 children: snapshot.data
                                     .map((todo) => buildItem(todo))
-                                    .toList());
+                                    .toList()));
                           } else {
                             return SizedBox();
                           }
@@ -481,10 +481,10 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
                                       height: 100,
                                       child: Padding(
                                         padding:
-                                            EdgeInsets.fromLTRB(10, 2, 0, 0),
+                                        EdgeInsets.fromLTRB(10, 2, 0, 0),
                                         child: Column(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                           children: <Widget>[
                                             Text(
                                               itemsDummy1[index],
@@ -498,9 +498,9 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
                                                     border: Border.all(
                                                         color: Colors.teal),
                                                     borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                10))),
+                                                    BorderRadius.all(
+                                                        Radius.circular(
+                                                            10))),
                                                 child: Text(
                                                   "3D",
                                                   textAlign: TextAlign.center,
@@ -581,10 +581,10 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
                                       height: 100,
                                       child: Padding(
                                         padding:
-                                            EdgeInsets.fromLTRB(10, 2, 0, 0),
+                                        EdgeInsets.fromLTRB(10, 2, 0, 0),
                                         child: Column(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                           children: <Widget>[
                                             Text(
                                               itemsDummy1[index],
@@ -598,9 +598,9 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
                                                     border: Border.all(
                                                         color: Colors.teal),
                                                     borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                10))),
+                                                    BorderRadius.all(
+                                                        Radius.circular(
+                                                            10))),
                                                 child: Text(
                                                   "3D",
                                                   textAlign: TextAlign.center,
@@ -681,10 +681,10 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
                                       height: 100,
                                       child: Padding(
                                         padding:
-                                            EdgeInsets.fromLTRB(10, 2, 0, 0),
+                                        EdgeInsets.fromLTRB(10, 2, 0, 0),
                                         child: Column(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                           children: <Widget>[
                                             Text(
                                               itemsDummy1[index],
@@ -698,9 +698,9 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
                                                     border: Border.all(
                                                         color: Colors.teal),
                                                     borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                10))),
+                                                    BorderRadius.all(
+                                                        Radius.circular(
+                                                            10))),
                                                 child: Text(
                                                   "3D",
                                                   textAlign: TextAlign.center,
@@ -782,22 +782,22 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
                                       padding: EdgeInsets.fromLTRB(10, 2, 0, 0),
                                       child: Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
                                             itemsDummy1[index],
                                           ),
                                           Padding(
                                             padding:
-                                                EdgeInsets.fromLTRB(0, 3, 0, 3),
+                                            EdgeInsets.fromLTRB(0, 3, 0, 3),
                                             child: Container(
                                               width: 30,
                                               decoration: BoxDecoration(
                                                   border: Border.all(
                                                       color: Colors.teal),
                                                   borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(10))),
+                                                  BorderRadius.all(
+                                                      Radius.circular(10))),
                                               child: Text(
                                                 "3D",
                                                 textAlign: TextAlign.center,
@@ -806,7 +806,7 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
                                           ),
                                           Padding(
                                             padding:
-                                                EdgeInsets.fromLTRB(0, 5, 0, 2),
+                                            EdgeInsets.fromLTRB(0, 5, 0, 2),
                                             child: Container(
                                               width: 260,
                                               child: Text(
@@ -842,13 +842,25 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
 
   double itemArea(int temp) {
     if (temp >= 7) {
-      return MediaQuery.of(context).size.height + baru;
+      return MediaQuery
+          .of(context)
+          .size
+          .height + baru;
     } else if (temp == 6) {
-      return MediaQuery.of(context).size.height;
+      return MediaQuery
+          .of(context)
+          .size
+          .height;
     } else if (temp == 5) {
-      return MediaQuery.of(context).size.height - 115;
+      return MediaQuery
+          .of(context)
+          .size
+          .height - 115;
     }
-    return MediaQuery.of(context).size.height - 150;
+    return MediaQuery
+        .of(context)
+        .size
+        .height - 150;
   }
 
   static List getDummyList(temp) {
@@ -887,8 +899,8 @@ class StickyTabBarDelegate extends SliverPersistentHeaderDelegate {
   StickyTabBarDelegate({@required this.child});
 
   @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(BuildContext context, double shrinkOffset,
+      bool overlapsContent) {
     return this.child;
   }
 
