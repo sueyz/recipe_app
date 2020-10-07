@@ -28,11 +28,7 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
   String newValue = "Mediterranean";
   PageController controller = PageController();
   ScrollController scrollControllerTop;
-  int temp = 0;
-  int temp1 = 0;
-  int temp2 = 0;
-  int temp3 = 0;
-  int temp4 = 0;
+  List wow = [0,0,0,0,0];
 
   int current = 0;
 
@@ -122,9 +118,9 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
       switch (current) {
         case 0:
           {
-            temp++;
-            itemsDummy = getDummyList(temp);
-            if (temp >= 7) {
+            wow[0]++;
+            itemsDummy = getDummyList(wow[0]);
+            if (wow[0] >= 7) {
               items += result;
               sharedPrefs.list = items;
             }
@@ -136,9 +132,9 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
           break;
         case 1:
           {
-            temp1++;
-            itemsDummy1 = getDummyList(temp1);
-            if (temp1 >= 7) {
+            wow[1]++;
+            itemsDummy1 = getDummyList(wow[1]);
+            if (wow[1] >= 7) {
               items += result;
               sharedPrefs.list = items;
             }
@@ -150,9 +146,9 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
           break;
         case 2:
           {
-            temp2++;
-            itemsDummy2 = getDummyList(temp2);
-            if (temp2 >= 7) {
+            wow[2]++;
+            itemsDummy2 = getDummyList(wow[2]);
+            if (wow[2] >= 7) {
               items += result;
               sharedPrefs.list = items;
             }
@@ -160,9 +156,9 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
           break;
         case 3:
           {
-            temp3++;
-            itemsDummy3 = getDummyList(temp3);
-            if (temp3 >= 7) {
+            wow[3]++;
+            itemsDummy3 = getDummyList(wow[3]);
+            if (wow[3] >= 7) {
               items += result;
               sharedPrefs.list = items;
             }
@@ -170,9 +166,9 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
           break;
         case 4:
           {
-            temp4++;
-            itemsDummy4 = getDummyList(temp4);
-            if (temp4 >= 7) {
+            wow[4]++;
+            itemsDummy4 = getDummyList(wow[4]);
+            if (wow[4] >= 7) {
               items += result;
               sharedPrefs.list = items;
             }
@@ -219,7 +215,7 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
                         deleteTodo(todo);
                         setState(() {
                           items--;
-                          temp--;
+                          wow[position]--;
                           sharedPrefs.list = items;
                         });
                         Navigator.of(context).pop(true);
@@ -421,7 +417,7 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
                   ),
                 )),
             SliverFixedExtentList(
-              itemExtent: itemArea(temp),
+              itemExtent: itemArea(wow[current]),
               delegate: SliverChildListDelegate([
                 PageView.builder(
                   physics: NeverScrollableScrollPhysics(),
@@ -464,7 +460,7 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
     } else if (temp == 5) {
       return MediaQuery.of(context).size.height - 115;
     }
-    return MediaQuery.of(context).size.height - 150;
+    return MediaQuery.of(context).size.height - 160;
   }
 
   static List getDummyList(temp) {
