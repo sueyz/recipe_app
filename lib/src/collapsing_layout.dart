@@ -96,7 +96,7 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
     });
   }
 
-  void createTodo(Recipe todo, int current) async {
+  void createTodo(Recipe todo) async {
     // if (_formKey.currentState.validate()) {
     //   _formKey.currentState.save();
     var what = todo;
@@ -110,65 +110,64 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
   }
 
   _navigateToNewRecipe(BuildContext context) async {
-    final result = await Navigator.pushNamed(context, '/add');
-    int count = await RepositoryServiceRecipe.recipeCount();
+    final result = await Navigator.pushNamed(context, '/add', arguments: current);
     // 'Mediterranean',
     // 'Asian',
     // 'American',
     // 'European',
     // 'Vegan'
-    setState(() {
-      switch (current) {
-        case 0:
-          {
-            wow[0] += result;
-            sharedPrefs.list("Mediterranean", wow[0]);
-            log("aaaaaaaaa${wow[0]}");
-            createTodo(
-                Recipe(count, current, "rice", "sadad", "asdsadas", "adasd",
-                    false),
-                current);
-          }
-          break;
-        case 1:
-          {
-            wow[1] += result;
-            sharedPrefs.list("Asian", wow[1]);
-            createTodo(
-                Recipe(count, current, "Noodle", "sadad", "asdsadas", "adasd",
-                    false),
-                current);
-          }
-          break;
-        // case 2:
-        //   {
-        //     wow[2]++;
-        //     if (wow[2] >= 7) {
-        //       items += result;
-        //       sharedPrefs.list = items;
-        //     }
-        //   }
-        //   break;
-        // case 3:
-        //   {
-        //     wow[3]++;
-        //     if (wow[3] >= 7) {
-        //       items += result;
-        //       sharedPrefs.list = items;
-        //     }
-        //   }
-        //   break;
-        // case 4:
-        //   {
-        //     wow[4]++;
-        //     if (wow[4] >= 7) {
-        //       items += result;
-        //       sharedPrefs.list = items;
-        //     }
-        //   }
-        //   break;
-      }
-    });
+
+    if (result != null) {
+      setState(() {
+        switch (current) {
+          case 0:
+            {
+              wow[0]++;
+              sharedPrefs.list("Mediterranean", wow[0]);
+              log("aaaaaaaaa${wow[0]}");
+              createTodo(result);
+            }
+            break;
+          // case 1:
+          //   {
+          //     wow[1] += result;
+          //     sharedPrefs.list("Asian", wow[1]);
+          //     createTodo(
+          //         Recipe(count, current, "Noodle", "sadad", "asdsadas", "adasd",
+          //             false),
+          //         current);
+          //   }
+          //   break;
+          // case 2:
+          //   {
+          //     wow[2]++;
+          //     if (wow[2] >= 7) {
+          //       items += result;
+          //       sharedPrefs.list = items;
+          //     }
+          //   }
+          //   break;
+          // case 3:
+          //   {
+          //     wow[3]++;
+          //     if (wow[3] >= 7) {
+          //       items += result;
+          //       sharedPrefs.list = items;
+          //     }
+          //   }
+          //   break;
+          // case 4:
+          //   {
+          //     wow[4]++;
+          //     if (wow[4] >= 7) {
+          //       items += result;
+          //       sharedPrefs.list = items;
+          //     }
+          //   }
+          //   break;
+        }
+      });
+    }
   }
 
   Card buildItem(Recipe todo, int position) {
