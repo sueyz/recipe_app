@@ -10,6 +10,13 @@ class NewRecipe extends StatefulWidget {
   NewRecipe({Key key, this.toolbar}) : super(key: key);
 
   final ThemeData toolbar;
+  final arraySpinner = [
+    'Mediterranean',
+    'Asian',
+    'American',
+    'European',
+    'Vegan'
+  ];
 
   @override
   _NewRecipeState createState() => _NewRecipeState();
@@ -19,6 +26,10 @@ class _NewRecipeState extends State<NewRecipe> {
   File _image;
   final picker = ImagePicker();
   final _formKey = GlobalKey<FormState>();
+  String newValue = "Mediterranean";
+  int current = 0;
+
+
 
   final titleController = TextEditingController();
   final ingController = TextEditingController();
@@ -133,6 +144,52 @@ class _NewRecipeState extends State<NewRecipe> {
                                   ),
                                 ),
                         ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 40, left: 50, right: 50),
+                          child: Container(
+                            width: 270,
+                            decoration: BoxDecoration(
+                              color: Colors.black,
+                              border: Border.all(color: Colors.black, width: 5.0),
+                            ),
+                            child: Material(
+                              child: InkWell(
+                                onTap: () {},
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButton<String>(
+                                    isDense: true,
+                                    onChanged: (String changedValue) {
+                                      newValue = changedValue;
+                                      if (changedValue == widget.arraySpinner[0]) {
+                                        current = 0;
+                                      } else if (changedValue ==
+                                          widget.arraySpinner[1]) {
+                                        current = 1;
+                                      } else if (changedValue ==
+                                          widget.arraySpinner[2]) {
+                                        current = 2;
+                                      } else if (changedValue ==
+                                          widget.arraySpinner[3]) {
+                                        current = 3;
+                                      } else {
+                                        current = 4;
+                                      }
+                                      setState(() {});
+                                    },
+                                    value: newValue,
+                                    items: widget.arraySpinner.map((String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                              ),
+                              color: Colors.transparent,
+                            ),
+                          ),
+                        ),
                         Container(
                           padding: EdgeInsets.only(
                               bottom: 20, right: 25, left: 15, top: 20),
@@ -222,7 +279,7 @@ class _NewRecipeState extends State<NewRecipe> {
                               if (_image == null) {
                                 Navigator.of(context).pop(Recipe(
                                     count,
-                                    ModalRoute.of(context).settings.arguments,
+                                    current,
                                     titleController.text,
                                     "",
                                     ingController.text,
@@ -231,7 +288,7 @@ class _NewRecipeState extends State<NewRecipe> {
                               } else {
                                 Navigator.of(context).pop(Recipe(
                                     count,
-                                    ModalRoute.of(context).settings.arguments,
+                                    current,
                                     titleController.text,
                                     _image.path,
                                     ingController.text,

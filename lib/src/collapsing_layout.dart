@@ -113,12 +113,7 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
 
   _navigateToNewRecipe(BuildContext context) async {
     final result =
-        await Navigator.pushNamed(context, '/add', arguments: current);
-    // 'Mediterranean',
-    // 'Asian',
-    // 'American',
-    // 'European',
-    // 'Vegan'
+        await Navigator.pushNamed(context, '/add');
 
     if (result != null) {
       setState(() {
@@ -127,47 +122,37 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
             {
               wow[0]++;
               sharedPrefs.list("Mediterranean", wow[0]);
-              log("aaaaaaaaa${wow[0]}");
               createTodo(result);
             }
             break;
-          // case 1:
-          //   {
-          //     wow[1] += result;
-          //     sharedPrefs.list("Asian", wow[1]);
-          //     createTodo(
-          //         Recipe(count, current, "Noodle", "sadad", "asdsadas", "adasd",
-          //             false),
-          //         current);
-          //   }
-          //   break;
-          // case 2:
-          //   {
-          //     wow[2]++;
-          //     if (wow[2] >= 7) {
-          //       items += result;
-          //       sharedPrefs.list = items;
-          //     }
-          //   }
-          //   break;
-          // case 3:
-          //   {
-          //     wow[3]++;
-          //     if (wow[3] >= 7) {
-          //       items += result;
-          //       sharedPrefs.list = items;
-          //     }
-          //   }
-          //   break;
-          // case 4:
-          //   {
-          //     wow[4]++;
-          //     if (wow[4] >= 7) {
-          //       items += result;
-          //       sharedPrefs.list = items;
-          //     }
-          //   }
-          //   break;
+          case 1:
+            {
+              wow[1]++;
+              sharedPrefs.list("Asian", wow[1]);
+              createTodo(result);
+            }
+            break;
+          case 2:
+            {
+              wow[2]++;
+              sharedPrefs.list("American", wow[2]);
+              createTodo(result);
+            }
+            break;
+          case 3:
+            {
+              wow[3]++;
+              sharedPrefs.list("European", wow[3]);
+              createTodo(result);
+            }
+            break;
+          case 4:
+            {
+              wow[4]++;
+              sharedPrefs.list("Vegan", wow[4]);
+              createTodo(result);
+            }
+            break;
         }
       });
     }
