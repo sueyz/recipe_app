@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +44,7 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
   String ingredients;
   String steps;
   int id;
+  File _image;
 
   // int items = sharedPrefs.getList("Mediterranean");
   int temp = 0;
@@ -110,7 +112,8 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
   }
 
   _navigateToNewRecipe(BuildContext context) async {
-    final result = await Navigator.pushNamed(context, '/add', arguments: current);
+    final result =
+        await Navigator.pushNamed(context, '/add', arguments: current);
     // 'Mediterranean',
     // 'Asian',
     // 'American',
@@ -170,133 +173,126 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
     }
   }
 
-  Card buildItem(Recipe todo, int position) {
+  Padding buildItem(Recipe todo, int position) {
+    _image = File(todo.picture);
+
     if (todo.typPos == position) {
-      return Card(
-        elevation: 5,
-        child: Dismissible(
-          key: Key(todo.id.toString()),
-          background: Container(
-            alignment: Alignment.centerRight,
-            color: Colors.red,
-            child: Padding(
-              padding: EdgeInsets.only(right: 20),
-              child: Icon(
-                Icons.delete,
-                color: Colors.white,
+      return Padding(
+        padding: EdgeInsets.only(top: 5),
+        child: Card(
+          elevation: 5,
+          child: Dismissible(
+            key: Key(todo.id.toString()),
+            background: Container(
+              alignment: Alignment.centerRight,
+              color: Colors.red,
+              child: Padding(
+                padding: EdgeInsets.only(right: 20),
+                child: Icon(
+                  Icons.delete,
+                  color: Colors.white,
+                ),
               ),
             ),
-          ),
-          confirmDismiss: (DismissDirection direction) async {
-            return await showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: new Text("Are you sure?"),
-                  actions: <Widget>[
-                    // usually buttons at the bottom of the dialog
-                    FlatButton(
-                      child: new Text("Cancel"),
-                      onPressed: () {
-                        Navigator.of(context).pop(false);
-                      },
-                    ),
-                    FlatButton(
-                      child: new Text("Delete"),
-                      onPressed: () {
-                        deleteTodo(todo);
-                        setState(() {
-                          wow[position]--;
-                          switch (position) {
-                            case 0:
-                              sharedPrefs.list("Mediterranean", wow[position]);
-                              break;
-                            case 1:
-                              sharedPrefs.list("Asian", wow[position]);
-                              break;
-                            case 2:
-                              sharedPrefs.list("American", wow[position]);
-                              break;
-                            case 3:
-                              sharedPrefs.list("European", wow[position]);
-                              break;
-                            case 4:
-                              sharedPrefs.list("Vegan", wow[position]);
-                              break;
-                          }
-                        });
-                        Navigator.of(context).pop(true);
-                      },
-                    ),
-                  ],
-                );
-              },
-            );
-          },
-          direction: DismissDirection.endToStart,
-          child: Container(
-            color: getPos(current),
-            height: 100.0,
-            child: Row(
-              children: <Widget>[
-                Container(
-                  height: 100.0,
-                  width: 70.0,
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: NetworkImage(
-                              "https://is2-ssl.mzstatic.com/image/thumb/Video2/v4/e1/69/8b/e1698bc0-c23d-2424-40b7-527864c94a8e/pr_source.lsr/268x0w.png"))),
-                ),
-                Container(
-                  height: 100,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(10, 2, 0, 0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          todo.name,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(0, 3, 0, 3),
-                          child: Container(
-                            width: 30,
-                            decoration: BoxDecoration(
-                                border: Border.all(color: Colors.teal),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
+            confirmDismiss: (DismissDirection direction) async {
+              return await showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: new Text("Are you sure?"),
+                    actions: <Widget>[
+                      // usually buttons at the bottom of the dialog
+                      FlatButton(
+                        child: new Text("Cancel"),
+                        onPressed: () {
+                          Navigator.of(context).pop(false);
+                        },
+                      ),
+                      FlatButton(
+                        child: new Text("Delete"),
+                        onPressed: () {
+                          deleteTodo(todo);
+                          setState(() {
+                            wow[position]--;
+                            switch (position) {
+                              case 0:
+                                sharedPrefs.list(
+                                    "Mediterranean", wow[position]);
+                                break;
+                              case 1:
+                                sharedPrefs.list("Asian", wow[position]);
+                                break;
+                              case 2:
+                                sharedPrefs.list("American", wow[position]);
+                                break;
+                              case 3:
+                                sharedPrefs.list("European", wow[position]);
+                                break;
+                              case 4:
+                                sharedPrefs.list("Vegan", wow[position]);
+                                break;
+                            }
+                          });
+                          Navigator.of(context).pop(true);
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+            direction: DismissDirection.endToStart,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.orangeAccent,
+                border: Border.all(color: getPos(current), width: 5.0),
+              ),
+              height: 100.0,
+              child: Stack(
+                children: <Widget>[
+                  Container(
+                      height: 100.0,
+                      width: MediaQuery.of(context).size.width,
+                      child: _image.path == ''
+                          ? ClipRRect(
+                              child: Image.asset(
+                                "assets/images/vegies.jpg",
+                                fit: BoxFit.cover,
+                              ),
+                            )
+                          : ClipRRect(
+                              child: Image.file(
+                                _image,
+                                width: MediaQuery.of(context).size.width,
+                                height: 300,
+                                fit: BoxFit.cover,
+                              ),
+                            )),
+                  Positioned(
+                      child: Align(
+                          alignment: FractionalOffset.bottomRight,
+                          child: Padding(
+                            padding: EdgeInsets.only(right: 10, bottom: 5),
                             child: Text(
-                              "3D",
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(0, 5, 0, 2),
-                          child: Container(
-                            width: 260,
-                            child: Text(
-                              "His genius finally recognized by his idol Chester",
+                              todo.name,
                               style: TextStyle(
-                                  fontSize: 15,
-                                  color: Color.fromARGB(255, 48, 48, 54)),
+                                  fontSize: 27.0,
+                                  fontWeight: FontWeight.bold,
+                                  fontStyle: FontStyle.italic),
                             ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                )
-              ],
+                          )))
+                ],
+              ),
             ),
           ),
         ),
       );
     } else
-      return Card(
-        margin: EdgeInsets.zero,
-      );
+      return Padding(
+          padding: EdgeInsets.zero,
+          child: Card(
+            margin: EdgeInsets.zero,
+          ));
   }
 
   @override
@@ -438,7 +434,8 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           return Padding(
-                              padding: EdgeInsets.only(top: 10),
+                              padding:
+                                  EdgeInsets.only(top: 5, left: 15, right: 15),
                               child: Column(
                                   children: snapshot.data
                                       .map((todo) => buildItem(todo, position))
@@ -472,12 +469,12 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
 
   MaterialAccentColor getPos(pos) {
     if (pos == 0) return Colors.orangeAccent;
-    if (pos == 1) return Colors.blueAccent;
-    if (pos == 2) return Colors.deepPurpleAccent;
+    if (pos == 1) return Colors.redAccent;
+    if (pos == 2) return Colors.blueAccent;
     if (pos == 3)
       return Colors.purpleAccent;
     else {
-      return Colors.lightGreenAccent;
+      return Colors.greenAccent;
     }
   }
 
