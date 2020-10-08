@@ -1,7 +1,9 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'collapsing_layout.dart';
 import 'db/model/Recipe.dart';
 import 'db/repository/repository_service_recipe.dart';
 import 'package:image_picker/image_picker.dart';
@@ -101,10 +103,15 @@ class _NewRecipeState extends State<NewRecipe> {
   @override
   Widget build(BuildContext context) {
     // newValue = widget.arraySpinner[ModalRoute.of(context).settings.arguments];
-    if(aaaa){
-      newValue = widget.arraySpinner[ModalRoute.of(context).settings.arguments];
-      aaaa = false;
-    }
+
+    final ScreenArguments args = ModalRoute.of(context).settings.arguments;
+      if (aaaa) {
+        newValue =
+            widget.arraySpinner[args.current];
+        aaaa = false;
+      }
+
+
     return Theme(
         data: widget.toolbar.copyWith(primaryColor: Colors.lightGreen),
         child: Scaffold(
@@ -132,7 +139,7 @@ class _NewRecipeState extends State<NewRecipe> {
                           child: _image != null
                               ? ClipRRect(
                                   child: Image.file(
-                                    _image,
+                                    args.recipe != null ? args.recipe.picture : _image,
                                     width: MediaQuery.of(context).size.width,
                                     height: 300,
                                     fit: BoxFit.cover,
@@ -150,12 +157,14 @@ class _NewRecipeState extends State<NewRecipe> {
                                 ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(top: 40, left: 50, right: 50),
+                          padding:
+                              EdgeInsets.only(top: 40, left: 50, right: 50),
                           child: Container(
                             width: 270,
                             decoration: BoxDecoration(
                               color: Colors.black,
-                              border: Border.all(color: Colors.black, width: 5.0),
+                              border:
+                                  Border.all(color: Colors.black, width: 5.0),
                             ),
                             child: Material(
                               child: InkWell(
@@ -165,7 +174,8 @@ class _NewRecipeState extends State<NewRecipe> {
                                     isDense: true,
                                     onChanged: (String changedValue) {
                                       newValue = changedValue;
-                                      if (changedValue == widget.arraySpinner[0]) {
+                                      if (changedValue ==
+                                          widget.arraySpinner[0]) {
                                         current = 0;
                                       } else if (changedValue ==
                                           widget.arraySpinner[1]) {
@@ -182,7 +192,8 @@ class _NewRecipeState extends State<NewRecipe> {
                                       setState(() {});
                                     },
                                     value: newValue,
-                                    items: widget.arraySpinner.map((String value) {
+                                    items:
+                                        widget.arraySpinner.map((String value) {
                                       return DropdownMenuItem<String>(
                                         value: value,
                                         child: Text(value),

@@ -24,6 +24,14 @@ class CollapsingLayout extends StatefulWidget {
   _CollapsingLayoutState createState() => _CollapsingLayoutState();
 }
 
+class ScreenArguments {
+  final int type;
+  final Recipe recipe;
+  final int current;
+
+  ScreenArguments(this.type, this.recipe, this.current);
+}
+
 class _CollapsingLayoutState extends State<CollapsingLayout> {
   String newValue = "Mediterranean";
   PageController controller = PageController();
@@ -113,7 +121,7 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
 
   _navigateToNewRecipe(BuildContext context) async {
     final result =
-        await Navigator.pushNamed(context, '/add', arguments: current);
+        await Navigator.pushNamed(context, '/add', arguments: ScreenArguments(0, null, current));
 
     Recipe test = result;
 
@@ -162,6 +170,58 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
       });
     }
   }
+  _navigateToEditRecipe(BuildContext context, Recipe recipe) async {
+    final result =
+    await Navigator.pushNamed(context, '/add', arguments: ScreenArguments(1, recipe, current));
+
+    Recipe test = result;
+
+    if (result != null) {
+      setState(() {
+        current = test.typPos;
+        this.controller.jumpToPage(test.typPos);
+        newValue = widget.arraySpinner[test.typPos];
+        switch (current) {
+          case 0:
+            {
+              wow[0]++;
+              sharedPrefs.list("Mediterranean", wow[0]);
+              createTodo(result);
+            }
+            break;
+          case 1:
+            {
+              wow[1]++;
+              sharedPrefs.list("Asian", wow[1]);
+              createTodo(result);
+            }
+            break;
+          case 2:
+            {
+              wow[2]++;
+              sharedPrefs.list("American", wow[2]);
+              createTodo(result);
+            }
+            break;
+          case 3:
+            {
+              wow[3]++;
+              sharedPrefs.list("European", wow[3]);
+              createTodo(result);
+            }
+            break;
+          case 4:
+            {
+              wow[4]++;
+              sharedPrefs.list("Vegan", wow[4]);
+              createTodo(result);
+            }
+            break;
+        }
+      });
+    }
+  }
+
 
   Padding buildItem(Recipe todo, int position) {
     _image = File(todo.picture);
@@ -258,6 +318,18 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
                                 fit: BoxFit.cover,
                               ),
                             )),
+                  Positioned(
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: IconButton(
+                        iconSize: 30,
+                        icon: Icon(Icons.edit),
+                        onPressed: () {
+                          _navigateToEditRecipe(context, todo);
+                        },
+                      ),
+                    ),
+                  ),
                   Positioned(
                       child: Align(
                           alignment: FractionalOffset.bottomRight,
