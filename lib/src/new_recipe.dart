@@ -29,7 +29,7 @@ class _NewRecipeState extends State<NewRecipe> {
   String newValue = "Mediterranean";
   int current = 0;
 
-
+  bool aaaa = true;
 
   final titleController = TextEditingController();
   final ingController = TextEditingController();
@@ -100,6 +100,11 @@ class _NewRecipeState extends State<NewRecipe> {
 
   @override
   Widget build(BuildContext context) {
+    // newValue = widget.arraySpinner[ModalRoute.of(context).settings.arguments];
+    if(aaaa){
+      newValue = widget.arraySpinner[ModalRoute.of(context).settings.arguments];
+      aaaa = false;
+    }
     return Theme(
         data: widget.toolbar.copyWith(primaryColor: Colors.lightGreen),
         child: Scaffold(

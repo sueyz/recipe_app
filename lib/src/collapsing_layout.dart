@@ -113,10 +113,15 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
 
   _navigateToNewRecipe(BuildContext context) async {
     final result =
-        await Navigator.pushNamed(context, '/add');
+        await Navigator.pushNamed(context, '/add', arguments: current);
+
+    Recipe test = result;
 
     if (result != null) {
       setState(() {
+        current = test.typPos;
+        this.controller.jumpToPage(test.typPos);
+        newValue = widget.arraySpinner[test.typPos];
         switch (current) {
           case 0:
             {
