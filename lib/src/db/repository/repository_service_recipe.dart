@@ -100,8 +100,8 @@ class RepositoryServiceRecipe {
     ''';*/
 
     final sql = '''UPDATE ${DatabaseCreator.recipeTable}
-    SET ${DatabaseCreator.typePos} = ?,
-        ${DatabaseCreator.name} = ?,
+    SET ${DatabaseCreator.name} = ?,
+        ${DatabaseCreator.typePos} = ?,
         ${DatabaseCreator.picture} = ?,
         ${DatabaseCreator.ingredients} = ?,
         ${DatabaseCreator.steps} = ?

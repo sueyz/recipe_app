@@ -106,6 +106,7 @@ class _NewRecipeState extends State<NewRecipe> {
 
     final ScreenArguments args = ModalRoute.of(context).settings.arguments;
     if (aaaa) {
+      current = args.current;
       newValue = widget.arraySpinner[args.current];
       aaaa = false;
     }
@@ -330,7 +331,7 @@ class _NewRecipeState extends State<NewRecipe> {
                                 if (_image == null &&
                                     args.recipe.picture == "") {
                                   Navigator.of(context).pop(Recipe(
-                                      count,
+                                      args.recipe.id,
                                       current,
                                       titleController.text,
                                       "",
@@ -340,7 +341,7 @@ class _NewRecipeState extends State<NewRecipe> {
                                 } else if (_image != null &&
                                     args.recipe.picture == "") {
                                   Navigator.of(context).pop(Recipe(
-                                      count,
+                                      args.recipe.id,
                                       current,
                                       titleController.text,
                                       _image.path,
@@ -350,7 +351,7 @@ class _NewRecipeState extends State<NewRecipe> {
                                 } else {
                                   {
                                     Navigator.of(context).pop(Recipe(
-                                        count,
+                                        args.recipe.id,
                                         current,
                                         titleController.text,
                                         args.recipe.picture,

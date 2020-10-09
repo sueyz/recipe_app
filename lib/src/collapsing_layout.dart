@@ -91,7 +91,6 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
   }
 
   updateTodo(Recipe recipe) async {
-    recipe.name = 'Nasi';
     await RepositoryServiceRecipe.updateRecipe(recipe);
     setState(() {
       future = RepositoryServiceRecipe.getAllRecipe();
@@ -186,35 +185,35 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
             {
               wow[0]++;
               sharedPrefs.list("Mediterranean", wow[0]);
-              createTodo(result);
+              updateTodo(result);
             }
             break;
           case 1:
             {
               wow[1]++;
               sharedPrefs.list("Asian", wow[1]);
-              createTodo(result);
+              updateTodo(result);
             }
             break;
           case 2:
             {
               wow[2]++;
               sharedPrefs.list("American", wow[2]);
-              createTodo(result);
+              updateTodo(result);
             }
             break;
           case 3:
             {
               wow[3]++;
               sharedPrefs.list("European", wow[3]);
-              createTodo(result);
+              updateTodo(result);
             }
             break;
           case 4:
             {
               wow[4]++;
               sharedPrefs.list("Vegan", wow[4]);
-              createTodo(result);
+              updateTodo(result);
             }
             break;
         }
