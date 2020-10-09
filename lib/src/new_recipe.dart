@@ -105,12 +105,10 @@ class _NewRecipeState extends State<NewRecipe> {
     // newValue = widget.arraySpinner[ModalRoute.of(context).settings.arguments];
 
     final ScreenArguments args = ModalRoute.of(context).settings.arguments;
-      if (aaaa) {
-        newValue =
-            widget.arraySpinner[args.current];
-        aaaa = false;
-      }
-
+    if (aaaa) {
+      newValue = widget.arraySpinner[args.current];
+      aaaa = false;
+    }
 
     return Theme(
         data: widget.toolbar.copyWith(primaryColor: Colors.lightGreen),
@@ -139,22 +137,32 @@ class _NewRecipeState extends State<NewRecipe> {
                           child: _image != null
                               ? ClipRRect(
                                   child: Image.file(
-                                    args.recipe != null ? args.recipe.picture : _image,
+                                    _image,
                                     width: MediaQuery.of(context).size.width,
                                     height: 300,
                                     fit: BoxFit.cover,
                                   ),
                                 )
-                              : Container(
-                                  decoration:
-                                      BoxDecoration(color: Colors.grey[200]),
-                                  width: MediaQuery.of(context).size.width,
-                                  height: 300,
-                                  child: Icon(
-                                    Icons.add_a_photo,
-                                    color: Colors.grey[800],
-                                  ),
-                                ),
+                              : args.recipe != null && args.recipe.picture != ''
+                                  ? ClipRRect(
+                                      child: Image.file(
+                                        File(args.recipe.picture),
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        height: 300,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    )
+                                  : Container(
+                                      decoration: BoxDecoration(
+                                          color: Colors.grey[200]),
+                                      width: MediaQuery.of(context).size.width,
+                                      height: 300,
+                                      child: Icon(
+                                        Icons.add_a_photo,
+                                        color: Colors.grey[800],
+                                      ),
+                                    ),
                         ),
                         Padding(
                           padding:
