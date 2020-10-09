@@ -33,9 +33,9 @@ class _NewRecipeState extends State<NewRecipe> {
 
   bool aaaa = true;
 
-  final titleController = TextEditingController();
-  final ingController = TextEditingController();
-  final stepsController = TextEditingController();
+  var titleController = TextEditingController();
+  var ingController = TextEditingController();
+  var stepsController = TextEditingController();
 
   @override
   void dispose() {
@@ -108,6 +108,12 @@ class _NewRecipeState extends State<NewRecipe> {
     if (aaaa) {
       newValue = widget.arraySpinner[args.current];
       aaaa = false;
+    }
+    if (args.type == 1) {
+      // _image = File(args.recipe.picture);
+      titleController = TextEditingController(text: args.recipe.name);
+      ingController = TextEditingController(text: args.recipe.ingredients);
+      stepsController = TextEditingController(text: args.recipe.steps);
     }
 
     return Theme(
@@ -300,24 +306,59 @@ class _NewRecipeState extends State<NewRecipe> {
                               // If the form is valid, display a snackbar. In the real world,
                               // you'd often call a server or save the information in a database.
 
-                              if (_image == null) {
-                                Navigator.of(context).pop(Recipe(
-                                    count,
-                                    current,
-                                    titleController.text,
-                                    "",
-                                    ingController.text,
-                                    stepsController.text,
-                                    false));
+                              if (args.type == 0) {
+                                if (_image == null) {
+                                  Navigator.of(context).pop(Recipe(
+                                      count,
+                                      current,
+                                      titleController.text,
+                                      "",
+                                      ingController.text,
+                                      stepsController.text,
+                                      false));
+                                } else {
+                                  Navigator.of(context).pop(Recipe(
+                                      count,
+                                      current,
+                                      titleController.text,
+                                      _image.path,
+                                      ingController.text,
+                                      stepsController.text,
+                                      false));
+                                }
                               } else {
-                                Navigator.of(context).pop(Recipe(
-                                    count,
-                                    current,
-                                    titleController.text,
-                                    _image.path,
-                                    ingController.text,
-                                    stepsController.text,
-                                    false));
+                                if (_image == null &&
+                                    args.recipe.picture == "") {
+                                  Navigator.of(context).pop(Recipe(
+                                      count,
+                                      current,
+                                      titleController.text,
+                                      "",
+                                      ingController.text,
+                                      stepsController.text,
+                                      false));
+                                } else if (_image != null &&
+                                    args.recipe.picture == "") {
+                                  Navigator.of(context).pop(Recipe(
+                                      count,
+                                      current,
+                                      titleController.text,
+                                      _image.path,
+                                      ingController.text,
+                                      stepsController.text,
+                                      false));
+                                } else {
+                                  {
+                                    Navigator.of(context).pop(Recipe(
+                                        count,
+                                        current,
+                                        titleController.text,
+                                        args.recipe.picture,
+                                        ingController.text,
+                                        stepsController.text,
+                                        false));
+                                  }
+                                }
                               }
                             }
                             // Navigate back to the first screen by popping the current route
