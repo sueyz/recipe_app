@@ -348,6 +348,16 @@ class _NewRecipeState extends State<NewRecipe> {
                                       ingController.text,
                                       stepsController.text,
                                       false));
+                                } else if (_image != null &&
+                                    args.recipe.picture != "") {
+                                  Navigator.of(context).pop(Recipe(
+                                      args.recipe.id,
+                                      current,
+                                      titleController.text,
+                                      _image.path,
+                                      ingController.text,
+                                      stepsController.text,
+                                      false));
                                 } else {
                                   {
                                     Navigator.of(context).pop(Recipe(
