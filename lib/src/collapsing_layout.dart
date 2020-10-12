@@ -37,14 +37,15 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
   PageController controller = PageController();
   ScrollController scrollControllerTop;
   List wow = [
-    sharedPrefs.getList("Mediterranean"),
-    sharedPrefs.getList("Asian"),
-    sharedPrefs.getList("American"),
-    sharedPrefs.getList("European"),
-    sharedPrefs.getList("Vegan")
+    sharedPrefs.getList(0.toString()),
+    sharedPrefs.getList(1.toString()),
+    sharedPrefs.getList(2.toString()),
+    sharedPrefs.getList(3.toString()),
+    sharedPrefs.getList(4.toString())
   ];
 
   int current = 0;
+  int previous = 0;
 
   Future<List<Recipe>> future;
   String name;
@@ -119,8 +120,8 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
   }
 
   _navigateToNewRecipe(BuildContext context) async {
-    final result =
-        await Navigator.pushNamed(context, '/add', arguments: ScreenArguments(0, null, current));
+    final result = await Navigator.pushNamed(context, '/add',
+        arguments: ScreenArguments(0, null, current));
 
     Recipe test = result;
 
@@ -133,35 +134,35 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
           case 0:
             {
               wow[0]++;
-              sharedPrefs.list("Mediterranean", wow[0]);
+              sharedPrefs.list(0.toString(), wow[0]);
               createTodo(result);
             }
             break;
           case 1:
             {
               wow[1]++;
-              sharedPrefs.list("Asian", wow[1]);
+              sharedPrefs.list(1.toString(), wow[1]);
               createTodo(result);
             }
             break;
           case 2:
             {
               wow[2]++;
-              sharedPrefs.list("American", wow[2]);
+              sharedPrefs.list(2.toString(), wow[2]);
               createTodo(result);
             }
             break;
           case 3:
             {
               wow[3]++;
-              sharedPrefs.list("European", wow[3]);
+              sharedPrefs.list(3.toString(), wow[3]);
               createTodo(result);
             }
             break;
           case 4:
             {
               wow[4]++;
-              sharedPrefs.list("Vegan", wow[4]);
+              sharedPrefs.list(4.toString(), wow[4]);
               createTodo(result);
             }
             break;
@@ -169,50 +170,62 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
       });
     }
   }
+
   _navigateToEditRecipe(BuildContext context, Recipe recipe) async {
-    final result =
-    await Navigator.pushNamed(context, '/add', arguments: ScreenArguments(1, recipe, current));
+    final result = await Navigator.pushNamed(context, '/add',
+        arguments: ScreenArguments(1, recipe, current));
 
     Recipe test = result;
 
     if (result != null) {
       setState(() {
+        previous = current;
         current = test.typPos;
         this.controller.jumpToPage(test.typPos);
         newValue = widget.arraySpinner[test.typPos];
         switch (current) {
           case 0:
             {
-              wow[0]++;
-              sharedPrefs.list("Mediterranean", wow[0]);
+              wow[test.typPos]++;
+              sharedPrefs.list(test.typPos.toString(), wow[test.typPos]);
+              wow[previous]--;
+              sharedPrefs.list(previous.toString(), wow[previous]);
               updateTodo(result);
             }
             break;
           case 1:
             {
-              wow[1]++;
-              sharedPrefs.list("Asian", wow[1]);
+              wow[test.typPos]++;
+              sharedPrefs.list(test.typPos.toString(), wow[test.typPos]);
+              wow[previous]--;
+              sharedPrefs.list(previous.toString(), wow[previous]);
               updateTodo(result);
             }
             break;
           case 2:
             {
-              wow[2]++;
-              sharedPrefs.list("American", wow[2]);
+              wow[test.typPos]++;
+              sharedPrefs.list(test.typPos.toString(), wow[test.typPos]);
+              wow[previous]--;
+              sharedPrefs.list(previous.toString(), wow[previous]);
               updateTodo(result);
             }
             break;
           case 3:
             {
-              wow[3]++;
-              sharedPrefs.list("European", wow[3]);
+              wow[test.typPos]++;
+              sharedPrefs.list(test.typPos.toString(), wow[test.typPos]);
+              wow[previous]--;
+              sharedPrefs.list(previous.toString(), wow[previous]);
               updateTodo(result);
             }
             break;
           case 4:
             {
-              wow[4]++;
-              sharedPrefs.list("Vegan", wow[4]);
+              wow[test.typPos]++;
+              sharedPrefs.list(test.typPos.toString(), wow[test.typPos]);
+              wow[previous]--;
+              sharedPrefs.list(previous.toString(), wow[previous]);
               updateTodo(result);
             }
             break;
@@ -220,7 +233,6 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
       });
     }
   }
-
 
   Padding buildItem(Recipe todo, int position) {
     _image = File(todo.picture);
@@ -265,20 +277,19 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
                             wow[position]--;
                             switch (position) {
                               case 0:
-                                sharedPrefs.list(
-                                    "Mediterranean", wow[position]);
+                                sharedPrefs.list(0.toString(), wow[position]);
                                 break;
                               case 1:
-                                sharedPrefs.list("Asian", wow[position]);
+                                sharedPrefs.list(1.toString(), wow[position]);
                                 break;
                               case 2:
-                                sharedPrefs.list("American", wow[position]);
+                                sharedPrefs.list(2.toString(), wow[position]);
                                 break;
                               case 3:
-                                sharedPrefs.list("European", wow[position]);
+                                sharedPrefs.list(3.toString(), wow[position]);
                                 break;
                               case 4:
-                                sharedPrefs.list("Vegan", wow[position]);
+                                sharedPrefs.list(4.toString(), wow[position]);
                                 break;
                             }
                           });
@@ -545,19 +556,19 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
         wow[current] = 0;
         switch (current) {
           case 0:
-            sharedPrefs.list("Mediterranean", 0);
+            sharedPrefs.list(0.toString(), 0);
             break;
           case 1:
-            sharedPrefs.list("Asian", 0);
+            sharedPrefs.list(1.toString(), 0);
             break;
           case 2:
-            sharedPrefs.list("American", 0);
+            sharedPrefs.list(2.toString(), 0);
             break;
           case 3:
-            sharedPrefs.list("European", 0);
+            sharedPrefs.list(3.toString(), 0);
             break;
           case 4:
-            sharedPrefs.list("Vegan", 0);
+            sharedPrefs.list(4.toString(), 0);
             break;
         }
       }

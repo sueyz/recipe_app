@@ -1,5 +1,4 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:recipe_app/src/constants/strings.dart';
 
 class SharedPrefs {
   static SharedPreferences _sharedPrefs;
