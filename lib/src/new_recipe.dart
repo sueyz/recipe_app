@@ -100,6 +100,15 @@ class _NewRecipeState extends State<NewRecipe> {
         });
   }
 
+  String setTitle(args){
+  if (args.type == 1) {
+    return "Edit Recipe";
+  }
+  else{
+    return "Add New Recipe";
+  }
+}
+
   @override
   Widget build(BuildContext context) {
     // newValue = widget.arraySpinner[ModalRoute.of(context).settings.arguments];
@@ -117,11 +126,13 @@ class _NewRecipeState extends State<NewRecipe> {
       stepsController = TextEditingController(text: args.recipe.steps);
     }
 
+
+
     return Theme(
         data: widget.toolbar.copyWith(primaryColor: Colors.lightGreen),
         child: Scaffold(
             appBar: AppBar(
-              title: Text("Add New Recipe"),
+              title: Text(setTitle(args)),
               automaticallyImplyLeading: true,
               leading: IconButton(
                 icon: Icon(Icons.arrow_back),
@@ -375,7 +386,7 @@ class _NewRecipeState extends State<NewRecipe> {
                             // Navigate back to the first screen by popping the current route
                             // off the stack.
                           },
-                          child: Text('Create'),
+                          child: Text('Submit'),
                         ),
                       )),
                 )
