@@ -145,6 +145,10 @@ class _NewRecipeState extends State<NewRecipe> {
       bbbb = false;
     }
 
+    if(_image != null){
+      button = true;
+    }
+
     return Theme(
         data: widget.toolbar.copyWith(primaryColor: Colors.lightGreen),
         child: Scaffold(
@@ -363,6 +367,7 @@ class _NewRecipeState extends State<NewRecipe> {
                                             false));
                                       }
                                     } else {
+                                      //dont put image keep default
                                       if (_image == null &&
                                           args.recipe.picture == "") {
                                         Navigator.of(context).pop(Recipe(
@@ -375,6 +380,7 @@ class _NewRecipeState extends State<NewRecipe> {
                                             false));
                                       } else if (_image != null &&
                                           args.recipe.picture == "") {
+                                        //default to put image
                                         Navigator.of(context).pop(Recipe(
                                             args.recipe.id,
                                             current,
@@ -385,6 +391,7 @@ class _NewRecipeState extends State<NewRecipe> {
                                             false));
                                       } else if (_image != null &&
                                           args.recipe.picture != "") {
+                                        //kept image to another new image
                                         Navigator.of(context).pop(Recipe(
                                             args.recipe.id,
                                             current,
@@ -394,6 +401,7 @@ class _NewRecipeState extends State<NewRecipe> {
                                             widget.stepsController.text,
                                             false));
                                       } else {
+                                        //kept image to no change
                                         {
                                           Navigator.of(context).pop(Recipe(
                                               args.recipe.id,
