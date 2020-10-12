@@ -106,7 +106,7 @@ class _NewRecipeState extends State<NewRecipe> {
 
   String setTitle(args) {
     if (args.type == 1) {
-      return "Edit Recipe";
+      return "Recipe Details";
     } else {
       return "Add New Recipe";
     }
