@@ -241,123 +241,120 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
       return Padding(
         padding: EdgeInsets.only(top: 5),
         child: Card(
-          elevation: 5,
-          child: Dismissible(
-            key: Key(todo.id.toString()),
-            background: Container(
-              alignment: Alignment.centerRight,
-              color: Colors.red,
-              child: Padding(
-                padding: EdgeInsets.only(right: 20),
-                child: Icon(
-                  Icons.delete,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            confirmDismiss: (DismissDirection direction) async {
-              return await showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: new Text("Are you sure?"),
-                    actions: <Widget>[
-                      // usually buttons at the bottom of the dialog
-                      FlatButton(
-                        child: new Text("Cancel"),
-                        onPressed: () {
-                          Navigator.of(context).pop(false);
-                        },
-                      ),
-                      FlatButton(
-                        child: new Text("Delete"),
-                        onPressed: () {
-                          deleteTodo(todo);
-                          setState(() {
-                            wow[position]--;
-                            switch (position) {
-                              case 0:
-                                sharedPrefs.list(0.toString(), wow[position]);
-                                break;
-                              case 1:
-                                sharedPrefs.list(1.toString(), wow[position]);
-                                break;
-                              case 2:
-                                sharedPrefs.list(2.toString(), wow[position]);
-                                break;
-                              case 3:
-                                sharedPrefs.list(3.toString(), wow[position]);
-                                break;
-                              case 4:
-                                sharedPrefs.list(4.toString(), wow[position]);
-                                break;
-                            }
-                          });
-                          Navigator.of(context).pop(true);
-                        },
-                      ),
-                    ],
-                  );
-                },
-              );
-            },
-            direction: DismissDirection.endToStart,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.orangeAccent,
-                border: Border.all(color: getPos(current), width: 5.0),
-              ),
-              height: 100.0,
-              child: Stack(
-                children: <Widget>[
-                  Container(
-                      height: 100.0,
-                      width: MediaQuery.of(context).size.width,
-                      child: _image.path == ''
-                          ? ClipRRect(
-                              child: Image.asset(
-                                "assets/images/vegies.jpg",
-                                fit: BoxFit.cover,
-                              ),
-                            )
-                          : ClipRRect(
-                              child: Image.file(
-                                _image,
-                                width: MediaQuery.of(context).size.width,
-                                height: 300,
-                                fit: BoxFit.cover,
-                              ),
-                            )),
-                  Positioned(
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: IconButton(
-                        iconSize: 30,
-                        icon: Icon(Icons.edit),
-                        onPressed: () {
-                          _navigateToEditRecipe(context, todo);
-                        },
-                      ),
+            elevation: 5,
+            child: GestureDetector(
+              onTap: () {
+                _navigateToEditRecipe(context, todo);
+              },
+              child: Dismissible(
+                key: Key(todo.id.toString()),
+                background: Container(
+                  alignment: Alignment.centerRight,
+                  color: Colors.red,
+                  child: Padding(
+                    padding: EdgeInsets.only(right: 20),
+                    child: Icon(
+                      Icons.delete,
+                      color: Colors.white,
                     ),
                   ),
-                  Positioned(
-                      child: Align(
-                          alignment: FractionalOffset.bottomRight,
-                          child: Padding(
-                            padding: EdgeInsets.only(right: 10, bottom: 5),
-                            child: Text(
-                              todo.name,
-                              style: TextStyle(
-                                  fontSize: 27.0,
-                                  fontWeight: FontWeight.bold,
-                                  fontStyle: FontStyle.italic),
-                            ),
-                          )))
-                ],
+                ),
+                confirmDismiss: (DismissDirection direction) async {
+                  return await showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: new Text("Are you sure?"),
+                        actions: <Widget>[
+                          // usually buttons at the bottom of the dialog
+                          FlatButton(
+                            child: new Text("Cancel"),
+                            onPressed: () {
+                              Navigator.of(context).pop(false);
+                            },
+                          ),
+                          FlatButton(
+                            child: new Text("Delete"),
+                            onPressed: () {
+                              deleteTodo(todo);
+                              setState(() {
+                                wow[position]--;
+                                switch (position) {
+                                  case 0:
+                                    sharedPrefs.list(
+                                        0.toString(), wow[position]);
+                                    break;
+                                  case 1:
+                                    sharedPrefs.list(
+                                        1.toString(), wow[position]);
+                                    break;
+                                  case 2:
+                                    sharedPrefs.list(
+                                        2.toString(), wow[position]);
+                                    break;
+                                  case 3:
+                                    sharedPrefs.list(
+                                        3.toString(), wow[position]);
+                                    break;
+                                  case 4:
+                                    sharedPrefs.list(
+                                        4.toString(), wow[position]);
+                                    break;
+                                }
+                              });
+                              Navigator.of(context).pop(true);
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+                direction: DismissDirection.endToStart,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.orangeAccent,
+                    border: Border.all(color: getPos(current), width: 5.0),
+                  ),
+                  height: 100.0,
+                  child: Stack(
+                    children: <Widget>[
+                      Container(
+                          height: 100.0,
+                          width: MediaQuery.of(context).size.width,
+                          child: _image.path == ''
+                              ? ClipRRect(
+                                  child: Image.asset(
+                                    "assets/images/vegies.jpg",
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
+                              : ClipRRect(
+                                  child: Image.file(
+                                    _image,
+                                    width: MediaQuery.of(context).size.width,
+                                    height: 300,
+                                    fit: BoxFit.cover,
+                                  ),
+                                )),
+                      Positioned(
+                          child: Align(
+                              alignment: FractionalOffset.bottomRight,
+                              child: Padding(
+                                padding: EdgeInsets.only(right: 10, bottom: 5),
+                                child: Text(
+                                  todo.name,
+                                  style: TextStyle(
+                                      fontSize: 27.0,
+                                      fontWeight: FontWeight.bold,
+                                      fontStyle: FontStyle.italic),
+                                ),
+                              )))
+                    ],
+                  ),
+                ),
               ),
-            ),
-          ),
-        ),
+            )),
       );
     } else
       return Padding(
