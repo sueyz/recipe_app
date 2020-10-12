@@ -113,10 +113,13 @@ class _NewRecipeState extends State<NewRecipe> {
   }
 
   bool checkDiff(ScreenArguments args, button) {
+    if(args.type == 0){
+      return true;
+    }
     if (widget.titleController.text != args.recipe.name ||
         widget.ingController.text != args.recipe.ingredients ||
         widget.stepsController.text != args.recipe.steps ||
-        button) {
+        button ) {
       return true;
     }
     return false;
