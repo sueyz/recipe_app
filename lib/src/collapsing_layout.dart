@@ -533,7 +533,7 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
     } else if (temp == 5) {
       return MediaQuery.of(context).size.height - 115;
     }
-    return MediaQuery.of(context).size.height - 160;
+    return MediaQuery.of(context).size.height/1.29;
   }
 
   MaterialAccentColor getPos(pos) {

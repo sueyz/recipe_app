@@ -53,7 +53,7 @@ class SliverFabState extends State<SliverContainer> {
   Widget _buildFab() {
     // final topMarginAdjustVal =
     //     Theme.of(context).platform == TargetPlatform.iOS ? 12.0 : -4.0;
-    final double defaultTopMargin = widget.expandedHeight;
+    final double defaultTopMargin = MediaQuery.of(context).size.height/3.56;
 
     double top = defaultTopMargin;
     double scale = 1.0;
@@ -68,10 +68,10 @@ class SliverFabState extends State<SliverContainer> {
         opacity = 1;
       }
 
-      if (offset < defaultTopMargin - widget.topScalingEdge) {
+      if (offset < widget.expandedHeight - widget.topScalingEdge) {
         scale = 1.0;
-      } else if (offset < defaultTopMargin - widget.topScalingEdge / 2) {
-        scale = (defaultTopMargin - widget.topScalingEdge / 2 - offset) /
+      } else if (offset < widget.expandedHeight - widget.topScalingEdge / 2) {
+        scale = (widget.expandedHeight - widget.topScalingEdge / 2 - offset) /
             (widget.topScalingEdge / 2);
       } else {
         scale = 0.0;
