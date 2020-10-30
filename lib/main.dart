@@ -25,9 +25,7 @@ class MyApp extends StatelessWidget {
       theme: _themeData,
       initialRoute: '/',
       routes: {
-        // When we navigate to the "/" route, build the FirstScreen Widget
-        // '/': (context) => CollapsingTab(),
-        // When we navigate to the "/profile" route, build the SecondScreen Widget
+        //main screen
         '/': (context) => CollapsingLayout(
               toolbar: _themeData,
             ),

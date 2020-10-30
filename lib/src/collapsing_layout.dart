@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -36,7 +35,7 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
   String newValue = "Mediterranean";
   PageController controller = PageController();
   ScrollController scrollControllerTop;
-  List wow = [
+  List recipeCardSpace = [
     sharedPrefs.getList(0.toString()),
     sharedPrefs.getList(1.toString()),
     sharedPrefs.getList(2.toString()),
@@ -55,12 +54,11 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
   int id;
   File _image;
 
-  // int items = sharedPrefs.getList("Mediterranean");
   int temp = 0;
 
   double height = 110;
 
-  double baru = 0;
+  double newCardSpace = 0;
 
   @override
   void initState() {
@@ -79,11 +77,11 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
   }
 
   void readData(int current) async {
-    final todo = await RepositoryServiceRecipe.getRecipe(current);
-    print(todo.name);
+    final recipe = await RepositoryServiceRecipe.getRecipe(current);
+    print(recipe.name);
   }
 
-  addTodo(Recipe recipe) async {
+  addRecipe(Recipe recipe) async {
     await RepositoryServiceRecipe.addRecipe(recipe);
     setState(() {
       future = RepositoryServiceRecipe.getAllRecipe();
@@ -91,14 +89,14 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
     });
   }
 
-  updateTodo(Recipe recipe) async {
+  updateRecipe(Recipe recipe) async {
     await RepositoryServiceRecipe.updateRecipe(recipe);
     setState(() {
       future = RepositoryServiceRecipe.getAllRecipe();
     });
   }
 
-  deleteTodo(Recipe recipe) async {
+  deleteRecipe(Recipe recipe) async {
     await RepositoryServiceRecipe.deleteRecipe(recipe);
     setState(() {
       id = null;
@@ -106,17 +104,14 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
     });
   }
 
-  void createTodo(Recipe todo) async {
-    // if (_formKey.currentState.validate()) {
-    //   _formKey.currentState.save();
-    var what = todo;
+  void createRecipe(Recipe recipe) async {
+    var what = recipe;
     await RepositoryServiceRecipe.addRecipe(what);
     setState(() {
       id = what.id;
       future = RepositoryServiceRecipe.getAllRecipe();
     });
     print(what.id);
-    // }
   }
 
   _navigateToNewRecipe(BuildContext context) async {
@@ -133,37 +128,37 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
         switch (current) {
           case 0:
             {
-              wow[0]++;
-              sharedPrefs.list(0.toString(), wow[0]);
-              createTodo(result);
+              recipeCardSpace[0]++;
+              sharedPrefs.list(0.toString(), recipeCardSpace[0]);
+              createRecipe(result);
             }
             break;
           case 1:
             {
-              wow[1]++;
-              sharedPrefs.list(1.toString(), wow[1]);
-              createTodo(result);
+              recipeCardSpace[1]++;
+              sharedPrefs.list(1.toString(), recipeCardSpace[1]);
+              createRecipe(result);
             }
             break;
           case 2:
             {
-              wow[2]++;
-              sharedPrefs.list(2.toString(), wow[2]);
-              createTodo(result);
+              recipeCardSpace[2]++;
+              sharedPrefs.list(2.toString(), recipeCardSpace[2]);
+              createRecipe(result);
             }
             break;
           case 3:
             {
-              wow[3]++;
-              sharedPrefs.list(3.toString(), wow[3]);
-              createTodo(result);
+              recipeCardSpace[3]++;
+              sharedPrefs.list(3.toString(), recipeCardSpace[3]);
+              createRecipe(result);
             }
             break;
           case 4:
             {
-              wow[4]++;
-              sharedPrefs.list(4.toString(), wow[4]);
-              createTodo(result);
+              recipeCardSpace[4]++;
+              sharedPrefs.list(4.toString(), recipeCardSpace[4]);
+              createRecipe(result);
             }
             break;
         }
@@ -186,47 +181,52 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
         switch (current) {
           case 0:
             {
-              wow[test.typPos]++;
-              sharedPrefs.list(test.typPos.toString(), wow[test.typPos]);
-              wow[previous]--;
-              sharedPrefs.list(previous.toString(), wow[previous]);
-              updateTodo(result);
+              recipeCardSpace[test.typPos]++;
+              sharedPrefs.list(
+                  test.typPos.toString(), recipeCardSpace[test.typPos]);
+              recipeCardSpace[previous]--;
+              sharedPrefs.list(previous.toString(), recipeCardSpace[previous]);
+              updateRecipe(result);
             }
             break;
           case 1:
             {
-              wow[test.typPos]++;
-              sharedPrefs.list(test.typPos.toString(), wow[test.typPos]);
-              wow[previous]--;
-              sharedPrefs.list(previous.toString(), wow[previous]);
-              updateTodo(result);
+              recipeCardSpace[test.typPos]++;
+              sharedPrefs.list(
+                  test.typPos.toString(), recipeCardSpace[test.typPos]);
+              recipeCardSpace[previous]--;
+              sharedPrefs.list(previous.toString(), recipeCardSpace[previous]);
+              updateRecipe(result);
             }
             break;
           case 2:
             {
-              wow[test.typPos]++;
-              sharedPrefs.list(test.typPos.toString(), wow[test.typPos]);
-              wow[previous]--;
-              sharedPrefs.list(previous.toString(), wow[previous]);
-              updateTodo(result);
+              recipeCardSpace[test.typPos]++;
+              sharedPrefs.list(
+                  test.typPos.toString(), recipeCardSpace[test.typPos]);
+              recipeCardSpace[previous]--;
+              sharedPrefs.list(previous.toString(), recipeCardSpace[previous]);
+              updateRecipe(result);
             }
             break;
           case 3:
             {
-              wow[test.typPos]++;
-              sharedPrefs.list(test.typPos.toString(), wow[test.typPos]);
-              wow[previous]--;
-              sharedPrefs.list(previous.toString(), wow[previous]);
-              updateTodo(result);
+              recipeCardSpace[test.typPos]++;
+              sharedPrefs.list(
+                  test.typPos.toString(), recipeCardSpace[test.typPos]);
+              recipeCardSpace[previous]--;
+              sharedPrefs.list(previous.toString(), recipeCardSpace[previous]);
+              updateRecipe(result);
             }
             break;
           case 4:
             {
-              wow[test.typPos]++;
-              sharedPrefs.list(test.typPos.toString(), wow[test.typPos]);
-              wow[previous]--;
-              sharedPrefs.list(previous.toString(), wow[previous]);
-              updateTodo(result);
+              recipeCardSpace[test.typPos]++;
+              sharedPrefs.list(
+                  test.typPos.toString(), recipeCardSpace[test.typPos]);
+              recipeCardSpace[previous]--;
+              sharedPrefs.list(previous.toString(), recipeCardSpace[previous]);
+              updateRecipe(result);
             }
             break;
         }
@@ -234,20 +234,20 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
     }
   }
 
-  Padding buildItem(Recipe todo, int position) {
-    _image = File(todo.picture);
+  Padding buildRecipeCard(Recipe recipe, int position) {
+    _image = File(recipe.picture);
 
-    if (todo.typPos == position) {
+    if (recipe.typPos == position) {
       return Padding(
         padding: EdgeInsets.only(top: 5),
         child: Card(
             elevation: 5,
             child: GestureDetector(
               onTap: () {
-                _navigateToEditRecipe(context, todo);
+                _navigateToEditRecipe(context, recipe);
               },
               child: Dismissible(
-                key: Key(todo.id.toString()),
+                key: Key(recipe.id.toString()),
                 background: Container(
                   alignment: Alignment.centerRight,
                   color: Colors.red,
@@ -276,29 +276,29 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
                           FlatButton(
                             child: new Text("Delete"),
                             onPressed: () {
-                              deleteTodo(todo);
+                              deleteRecipe(recipe);
                               setState(() {
-                                wow[position]--;
+                                recipeCardSpace[position]--;
                                 switch (position) {
                                   case 0:
-                                    sharedPrefs.list(
-                                        0.toString(), wow[position]);
+                                    sharedPrefs.list(0.toString(),
+                                        recipeCardSpace[position]);
                                     break;
                                   case 1:
-                                    sharedPrefs.list(
-                                        1.toString(), wow[position]);
+                                    sharedPrefs.list(1.toString(),
+                                        recipeCardSpace[position]);
                                     break;
                                   case 2:
-                                    sharedPrefs.list(
-                                        2.toString(), wow[position]);
+                                    sharedPrefs.list(2.toString(),
+                                        recipeCardSpace[position]);
                                     break;
                                   case 3:
-                                    sharedPrefs.list(
-                                        3.toString(), wow[position]);
+                                    sharedPrefs.list(3.toString(),
+                                        recipeCardSpace[position]);
                                     break;
                                   case 4:
-                                    sharedPrefs.list(
-                                        4.toString(), wow[position]);
+                                    sharedPrefs.list(4.toString(),
+                                        recipeCardSpace[position]);
                                     break;
                                 }
                               });
@@ -343,7 +343,7 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
                               child: Padding(
                                 padding: EdgeInsets.only(right: 10, bottom: 5),
                                 child: Text(
-                                  todo.name,
+                                  recipe.name,
                                   style: TextStyle(
                                       fontSize: 27.0,
                                       fontWeight: FontWeight.bold,
@@ -489,7 +489,7 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
                   ),
                 )),
             SliverFixedExtentList(
-              itemExtent: itemArea(wow[current]),
+              itemExtent: cardSpace(recipeCardSpace[current]),
               delegate: SliverChildListDelegate([
                 PageView.builder(
                   physics: NeverScrollableScrollPhysics(),
@@ -507,7 +507,8 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
                                   EdgeInsets.only(top: 5, left: 15, right: 15),
                               child: Column(
                                   children: snapshot.data
-                                      .map((todo) => buildItem(todo, position))
+                                      .map((recipe) =>
+                                          buildRecipeCard(recipe, position))
                                       .toList()));
                         } else {
                           return SizedBox();
@@ -525,15 +526,15 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
     );
   }
 
-  double itemArea(int temp) {
+  double cardSpace(int temp) {
     if (temp >= 7) {
-      return MediaQuery.of(context).size.height + baru;
+      return MediaQuery.of(context).size.height + newCardSpace;
     } else if (temp == 6) {
       return MediaQuery.of(context).size.height;
     } else if (temp == 5) {
       return MediaQuery.of(context).size.height - 115;
     }
-    return MediaQuery.of(context).size.height/1.29;
+    return MediaQuery.of(context).size.height / 1.29;
   }
 
   MaterialAccentColor getPos(pos) {
@@ -549,8 +550,8 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
 
   void _incrementCounter() {
     setState(() {
-      if (wow[current] < 0) {
-        wow[current] = 0;
+      if (recipeCardSpace[current] < 0) {
+        recipeCardSpace[current] = 0;
         switch (current) {
           case 0:
             sharedPrefs.list(0.toString(), 0);
@@ -570,7 +571,7 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
         }
       }
 
-      baru = height * (wow[current] - 6);
+      newCardSpace = height * (recipeCardSpace[current] - 6);
     });
   }
 }

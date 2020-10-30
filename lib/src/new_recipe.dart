@@ -20,33 +20,33 @@ class NewRecipe extends StatefulWidget {
     'Vegan'
   ];
 
-  var titleController = TextEditingController();
-  var ingController = TextEditingController();
-  var stepsController = TextEditingController();
-
   @override
   _NewRecipeState createState() => _NewRecipeState();
 }
 
 class _NewRecipeState extends State<NewRecipe> {
+  var titleController = TextEditingController();
+  var ingController = TextEditingController();
+  var stepsController = TextEditingController();
+
   File _image;
   final picker = ImagePicker();
   final _formKey = GlobalKey<FormState>();
   String newValue = "Mediterranean";
-  String initalValue = "Mediterranean";
+  String initialValue = "Mediterranean";
 
   int current = 0;
 
-  bool aaaa = true;
-  bool bbbb = true;
+  bool newRecipe = true;
+  bool editRecipe = true;
   bool button = false;
 
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
-    widget.titleController.dispose();
-    widget.ingController.dispose();
-    widget.stepsController.dispose();
+    titleController.dispose();
+    ingController.dispose();
+    stepsController.dispose();
     super.dispose();
   }
 
@@ -113,13 +113,13 @@ class _NewRecipeState extends State<NewRecipe> {
   }
 
   bool checkDiff(ScreenArguments args, button) {
-    if(args.type == 0){
+    if (args.type == 0) {
       return true;
     }
-    if (widget.titleController.text != args.recipe.name ||
-        widget.ingController.text != args.recipe.ingredients ||
-        widget.stepsController.text != args.recipe.steps ||
-        button ) {
+    if (titleController.text != args.recipe.name ||
+        ingController.text != args.recipe.ingredients ||
+        stepsController.text != args.recipe.steps ||
+        button) {
       return true;
     }
     return false;
@@ -127,25 +127,22 @@ class _NewRecipeState extends State<NewRecipe> {
 
   @override
   Widget build(BuildContext context) {
-    // newValue = widget.arraySpinner[ModalRoute.of(context).settings.arguments];
 
     final ScreenArguments args = ModalRoute.of(context).settings.arguments;
-    if (aaaa) {
+    if (newRecipe) {
       current = args.current;
       newValue = widget.arraySpinner[args.current];
-      initalValue = widget.arraySpinner[args.current];
-      aaaa = false;
+      initialValue = widget.arraySpinner[args.current];
+      newRecipe = false;
     }
-    if (args.type == 1 && bbbb) {
-      // _image = File(args.recipe.picture);
-      widget.titleController = TextEditingController(text: args.recipe.name);
-      widget.ingController =
-          TextEditingController(text: args.recipe.ingredients);
-      widget.stepsController = TextEditingController(text: args.recipe.steps);
-      bbbb = false;
+    if (args.type == 1 && editRecipe) {
+      titleController = TextEditingController(text: args.recipe.name);
+      ingController = TextEditingController(text: args.recipe.ingredients);
+      stepsController = TextEditingController(text: args.recipe.steps);
+      editRecipe = false;
     }
 
-    if(_image != null){
+    if (_image != null) {
       button = true;
     }
 
@@ -220,7 +217,7 @@ class _NewRecipeState extends State<NewRecipe> {
                                   child: DropdownButton<String>(
                                     isDense: true,
                                     onChanged: (String changedValue) {
-                                      if (initalValue != changedValue) {
+                                      if (initialValue != changedValue) {
                                         button = true;
                                       } else {
                                         button = false;
@@ -274,7 +271,7 @@ class _NewRecipeState extends State<NewRecipe> {
                               ),
                               Expanded(
                                 child: TextFormField(
-                                  controller: widget.titleController,
+                                  controller: titleController,
                                   decoration: new InputDecoration(
                                       hintText: "What is this?"),
                                   // The validator receives the text that the user has entered.
@@ -293,7 +290,7 @@ class _NewRecipeState extends State<NewRecipe> {
                           padding:
                               EdgeInsets.only(bottom: 20, right: 15, left: 15),
                           child: TextFormField(
-                            controller: widget.ingController,
+                            controller: ingController,
                             decoration: new InputDecoration(
                                 hintText: "What is needed?",
                                 labelText: "Ingredients:"),
@@ -310,7 +307,7 @@ class _NewRecipeState extends State<NewRecipe> {
                           padding:
                               EdgeInsets.only(bottom: 100, right: 15, left: 15),
                           child: TextFormField(
-                            controller: widget.stepsController,
+                            controller: stepsController,
                             decoration: new InputDecoration(
                                 hintText: "What is needed to do?",
                                 labelText: "Steps:"),
@@ -325,7 +322,7 @@ class _NewRecipeState extends State<NewRecipe> {
                         ),
                         Container(
                           height:
-                              56, // button heigh, so could scroll underlapping area
+                              56, // button height, so could scroll underlapping area
                         ),
                       ],
                     ),
@@ -343,27 +340,25 @@ class _NewRecipeState extends State<NewRecipe> {
                                   int count = await RepositoryServiceRecipe
                                       .recipeCount();
                                   if (_formKey.currentState.validate()) {
-                                    // If the form is valid, display a snackbar. In the real world,
-                                    // you'd often call a server or save the information in a database.
 
                                     if (args.type == 0) {
                                       if (_image == null) {
                                         Navigator.of(context).pop(Recipe(
                                             count,
                                             current,
-                                            widget.titleController.text,
+                                            titleController.text,
                                             "",
-                                            widget.ingController.text,
-                                            widget.stepsController.text,
+                                            ingController.text,
+                                            stepsController.text,
                                             false));
                                       } else {
                                         Navigator.of(context).pop(Recipe(
                                             count,
                                             current,
-                                            widget.titleController.text,
+                                            titleController.text,
                                             _image.path,
-                                            widget.ingController.text,
-                                            widget.stepsController.text,
+                                            ingController.text,
+                                            stepsController.text,
                                             false));
                                       }
                                     } else {
@@ -373,10 +368,10 @@ class _NewRecipeState extends State<NewRecipe> {
                                         Navigator.of(context).pop(Recipe(
                                             args.recipe.id,
                                             current,
-                                            widget.titleController.text,
+                                            titleController.text,
                                             "",
-                                            widget.ingController.text,
-                                            widget.stepsController.text,
+                                            ingController.text,
+                                            stepsController.text,
                                             false));
                                       } else if (_image != null &&
                                           args.recipe.picture == "") {
@@ -384,10 +379,10 @@ class _NewRecipeState extends State<NewRecipe> {
                                         Navigator.of(context).pop(Recipe(
                                             args.recipe.id,
                                             current,
-                                            widget.titleController.text,
+                                            titleController.text,
                                             _image.path,
-                                            widget.ingController.text,
-                                            widget.stepsController.text,
+                                            ingController.text,
+                                            stepsController.text,
                                             false));
                                       } else if (_image != null &&
                                           args.recipe.picture != "") {
@@ -395,10 +390,10 @@ class _NewRecipeState extends State<NewRecipe> {
                                         Navigator.of(context).pop(Recipe(
                                             args.recipe.id,
                                             current,
-                                            widget.titleController.text,
+                                            titleController.text,
                                             _image.path,
-                                            widget.ingController.text,
-                                            widget.stepsController.text,
+                                            ingController.text,
+                                            stepsController.text,
                                             false));
                                       } else {
                                         //kept image to no change
@@ -406,10 +401,10 @@ class _NewRecipeState extends State<NewRecipe> {
                                           Navigator.of(context).pop(Recipe(
                                               args.recipe.id,
                                               current,
-                                              widget.titleController.text,
+                                              titleController.text,
                                               args.recipe.picture,
-                                              widget.ingController.text,
-                                              widget.stepsController.text,
+                                              ingController.text,
+                                              stepsController.text,
                                               false));
                                         }
                                       }

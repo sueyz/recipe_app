@@ -22,20 +22,6 @@ class SliverContainer extends StatefulWidget {
 }
 
 class SliverFabState extends State<SliverContainer> {
-  // ScrollController scrollController;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   scrollController = ScrollController();
-  //   scrollController.addListener(() => setState(() {}));
-  // }
-  //
-  // @override
-  // void dispose() {
-  //   scrollController.dispose();
-  //   super.dispose();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -51,8 +37,6 @@ class SliverFabState extends State<SliverContainer> {
   }
 
   Widget _buildFab() {
-    // final topMarginAdjustVal =
-    //     Theme.of(context).platform == TargetPlatform.iOS ? 12.0 : -4.0;
     final double defaultTopMargin = MediaQuery.of(context).size.height/3.56;
 
     double top = defaultTopMargin;
