@@ -4,8 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:recipe_app/src/db/model/Recipe.dart';
 import 'package:recipe_app/src/db/repository/repository_service_recipe.dart';
+import 'package:recipe_app/src/viewmodel/recipe_list_view_model.dart';
 import 'sliver_fab.dart';
 import 'package:recipe_app/src/utils/shared_prefs.dart';
+import 'package:provider/provider.dart';
+
 
 class CollapsingLayout extends StatefulWidget {
   CollapsingLayout({Key key, this.toolbar}) : super(key: key);
@@ -46,12 +49,8 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
   int current = 0;
   int previous = 0;
 
-  Future<List<Recipe>> future;
-  String name;
-  String picture;
-  String ingredients;
-  String steps;
-  int id;
+  // Future<List<Recipe>> future;
+
   File _image;
 
   int temp = 0;
@@ -63,7 +62,7 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
   @override
   void initState() {
     super.initState();
-    future = RepositoryServiceRecipe.getAllRecipe();
+    // future = RepositoryServiceRecipe.getAllRecipe();
     controller = PageController(initialPage: 0);
     scrollControllerTop = ScrollController();
     scrollControllerTop.addListener(() => setState(() {}));
@@ -76,45 +75,9 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
     super.dispose();
   }
 
-  void readData(int current) async {
-    final recipe = await RepositoryServiceRecipe.getRecipe(current);
-    print(recipe.name);
-  }
 
-  addRecipe(Recipe recipe) async {
-    await RepositoryServiceRecipe.addRecipe(recipe);
-    setState(() {
-      future = RepositoryServiceRecipe.getAllRecipe();
-      print(future);
-    });
-  }
 
-  updateRecipe(Recipe recipe) async {
-    await RepositoryServiceRecipe.updateRecipe(recipe);
-    setState(() {
-      future = RepositoryServiceRecipe.getAllRecipe();
-    });
-  }
-
-  deleteRecipe(Recipe recipe) async {
-    await RepositoryServiceRecipe.deleteRecipe(recipe);
-    setState(() {
-      id = null;
-      future = RepositoryServiceRecipe.getAllRecipe();
-    });
-  }
-
-  void createRecipe(Recipe recipe) async {
-    var what = recipe;
-    await RepositoryServiceRecipe.addRecipe(what);
-    setState(() {
-      id = what.id;
-      future = RepositoryServiceRecipe.getAllRecipe();
-    });
-    print(what.id);
-  }
-
-  _navigateToNewRecipe(BuildContext context) async {
+  _navigateToNewRecipe(BuildContext context, MovieListViewModel vm) async {
     final result = await Navigator.pushNamed(context, '/add',
         arguments: ScreenArguments(0, null, current));
 
@@ -130,35 +93,35 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
             {
               recipeCardSpace[0]++;
               sharedPrefs.list(0.toString(), recipeCardSpace[0]);
-              createRecipe(result);
+              vm.createRecipe(result);
             }
             break;
           case 1:
             {
               recipeCardSpace[1]++;
               sharedPrefs.list(1.toString(), recipeCardSpace[1]);
-              createRecipe(result);
+              vm.createRecipe(result);
             }
             break;
           case 2:
             {
               recipeCardSpace[2]++;
               sharedPrefs.list(2.toString(), recipeCardSpace[2]);
-              createRecipe(result);
+              vm.createRecipe(result);
             }
             break;
           case 3:
             {
               recipeCardSpace[3]++;
               sharedPrefs.list(3.toString(), recipeCardSpace[3]);
-              createRecipe(result);
+              vm.createRecipe(result);
             }
             break;
           case 4:
             {
               recipeCardSpace[4]++;
               sharedPrefs.list(4.toString(), recipeCardSpace[4]);
-              createRecipe(result);
+              vm.createRecipe(result);
             }
             break;
         }
@@ -166,7 +129,7 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
     }
   }
 
-  _navigateToEditRecipe(BuildContext context, Recipe recipe) async {
+  _navigateToEditRecipe(BuildContext context, Recipe recipe, MovieListViewModel vm ) async {
     final result = await Navigator.pushNamed(context, '/add',
         arguments: ScreenArguments(1, recipe, current));
 
@@ -186,7 +149,7 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
                   test.typPos.toString(), recipeCardSpace[test.typPos]);
               recipeCardSpace[previous]--;
               sharedPrefs.list(previous.toString(), recipeCardSpace[previous]);
-              updateRecipe(result);
+              vm.updateRecipe(result);
             }
             break;
           case 1:
@@ -196,7 +159,7 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
                   test.typPos.toString(), recipeCardSpace[test.typPos]);
               recipeCardSpace[previous]--;
               sharedPrefs.list(previous.toString(), recipeCardSpace[previous]);
-              updateRecipe(result);
+              vm.updateRecipe(result);
             }
             break;
           case 2:
@@ -206,7 +169,7 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
                   test.typPos.toString(), recipeCardSpace[test.typPos]);
               recipeCardSpace[previous]--;
               sharedPrefs.list(previous.toString(), recipeCardSpace[previous]);
-              updateRecipe(result);
+              vm.updateRecipe(result);
             }
             break;
           case 3:
@@ -216,7 +179,7 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
                   test.typPos.toString(), recipeCardSpace[test.typPos]);
               recipeCardSpace[previous]--;
               sharedPrefs.list(previous.toString(), recipeCardSpace[previous]);
-              updateRecipe(result);
+              vm.updateRecipe(result);
             }
             break;
           case 4:
@@ -226,7 +189,7 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
                   test.typPos.toString(), recipeCardSpace[test.typPos]);
               recipeCardSpace[previous]--;
               sharedPrefs.list(previous.toString(), recipeCardSpace[previous]);
-              updateRecipe(result);
+              vm.updateRecipe(result);
             }
             break;
         }
@@ -234,7 +197,8 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
     }
   }
 
-  Padding buildRecipeCard(Recipe recipe, int position) {
+  Padding buildRecipeCard(Recipe recipe, int position, MovieListViewModel vm) {
+
     _image = File(recipe.picture);
 
     if (recipe.typPos == position) {
@@ -244,7 +208,7 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
             elevation: 5,
             child: GestureDetector(
               onTap: () {
-                _navigateToEditRecipe(context, recipe);
+                _navigateToEditRecipe(context, recipe, vm);
               },
               child: Dismissible(
                 key: Key(recipe.id.toString()),
@@ -276,7 +240,7 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
                           FlatButton(
                             child: new Text("Delete"),
                             onPressed: () {
-                              deleteRecipe(recipe);
+                              vm.deleteRecipe(recipe);
                               setState(() {
                                 recipeCardSpace[position]--;
                                 switch (position) {
@@ -366,6 +330,8 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
 
   @override
   Widget build(BuildContext context) {
+    final vm = Provider.of<MovieListViewModel>(context);
+
     _incrementCounter();
 
     return Theme(
@@ -382,7 +348,7 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
               height: 55.0,
               width: 55.0,
               child: InkWell(
-                onTap: () => _navigateToNewRecipe(context),
+                onTap: () => _navigateToNewRecipe(context, vm),
                 child: Icon(
                   Icons.add,
                   color: Colors.black,
@@ -496,10 +462,8 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
                   controller: this.controller,
                   itemCount: 5,
                   itemBuilder: (context, position) {
-                    // future = RepositoryServiceRecipe.getspe(position);
-                    // readData(position);
                     return FutureBuilder<List<Recipe>>(
-                      future: future,
+                      future: vm.future,
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           return Padding(
@@ -508,7 +472,7 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
                               child: Column(
                                   children: snapshot.data
                                       .map((recipe) =>
-                                          buildRecipeCard(recipe, position))
+                                          buildRecipeCard(recipe, position, vm))
                                       .toList()));
                         } else {
                           return SizedBox();

@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'collapsing_layout.dart';
-import 'db/model/Recipe.dart';
-import 'db/repository/repository_service_recipe.dart';
+import '../db/model/Recipe.dart';
+import '../db/repository/repository_service_recipe.dart';
 import 'package:image_picker/image_picker.dart';
 
 class NewRecipe extends StatefulWidget {
