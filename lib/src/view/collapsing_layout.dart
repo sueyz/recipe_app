@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:recipe_app/src/db/model/Recipe.dart';
-import 'package:recipe_app/src/db/repository/repository_service_recipe.dart';
 import 'package:recipe_app/src/viewmodel/recipe_list_view_model.dart';
 import 'sliver_fab.dart';
 import 'package:recipe_app/src/utils/shared_prefs.dart';
@@ -48,8 +47,6 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
 
   int current = 0;
   int previous = 0;
-
-  // Future<List<Recipe>> future;
 
   File _image;
 
