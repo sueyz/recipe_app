@@ -327,6 +327,7 @@ class _CollapsingLayoutState extends State<CollapsingLayout> {
 
   @override
   Widget build(BuildContext context) {
+    //viewmodel
     final vm = Provider.of<MovieListViewModel>(context);
 
     _incrementCounter();
